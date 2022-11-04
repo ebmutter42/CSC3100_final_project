@@ -39,11 +39,11 @@
                         <input class="form-control" type="text" id="txtCreateLastName">
                     </div>
                     <div class="form-group">
-                        <label for="txtCreateExail" class="form-label mt-4">Email</label>
+                        <label for="txtCreateEmail" class="form-label mt-4">Email</label>
                         <input class="form-control" type="email" id="txtCreateEmail">
                     </div>
                     <div class="form-group">
-                        <label for="txtCreatePassword" class="form-label mt-4">Password</label>
+                        <label for="txtCreatePassword" class="form-label mt-4">Password (MUST be at least 8 characters and include an upper case and lower case letter, a number, and a special character)</label>
                         <input class="form-control" type="password" id="txtCreatePassword">
                     </div>
                     
@@ -70,28 +70,39 @@
                     </div>
                     
                     <!-- Address of Coop (if different) -->
-                    <div class="form-group">
+                    <div class="form-check mt-5">
+                        <label for="txtIsCoopSameAsPersonal" class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="txtIsCoopSameAsPersonal">
+                            Coop Is Not Located At Personal Address
+                        </label>
+                    </div>
+                    <div id="formStreet1" class="form-group d-none">
                         <label for="txtCreateBStreet1" class="form-label mt-4">Street 1</label>
                         <input class="form-control" type="text" id="txtCreateBStreet1">
                     </div>
-                    <div class="form-group">
+                    <div id="formStreet2" class="form-group d-none">
                         <label for="txtCreateBStreet2" class="form-label mt-4">Street 2</label>
                         <input class="form-control" type="text" id="txtCreateBStreet2">
                     </div>
-                    <div class="form-group">
+                    <div id="formCity" class="form-group d-none">
                         <label for="txtCreateBCity" class="form-label mt-4">City</label>
                         <input class="form-control" type="text" id="txtCreateBCity">
                     </div>
-                    <div class="form-group">
+                    <div id="formState" class="form-group d-none">
                         <label for="txtCreateBState" class="form-label mt-4">State</label>
                         <input class="form-control" type="text" id="txtCreateBState">
                     </div>
-                    <div class="form-group">
+                    <div id="formZip" class="form-group d-none">
                         <label for="txtCreateBZIP" class="form-label mt-4">ZIP</label>
                         <input class="form-control" type="text" id="txtCreateBZIP">
                     </div>
+
+                    <div class="form-group">
+                        <label for="txtCreateCode" class="form-label mt-4">Enter a code consisting of letters and numbers which will be associated with your Coop:</label>
+                        <input class="form-control" type="text" id="txtCreateCode">
+                    </div>
                 </form>
-                <button class="btn btn-info col-12 mt-3 mb-5" type="button">Create Account</button>
+                <button id="btnRegister" class="btn btn-info col-12 mt-3 mb-5" type="button">Create Account</button>
             </div>
         </div>
 
@@ -103,17 +114,36 @@
                 </div>
                 <form id="formLogin">
                     <div class="form-group">
-                        <label for="txEmail" class="form-label mt-4">Email</label>
-                        <input class="form-control" type="email" id="txtEmail">
+                        <label for="txtLoginEmail" class="form-label mt-4">Email</label>
+                        <input class="form-control" type="email" id="txtLoginEmail">
                     </div>
                     <div class="form-group">
-                        <label for="txtPassword" class="form-label mt-4">Password</label>
-                        <input class="form-control" type="password" id="txtPassword">
+                        <label for="txtLoginPassword" class="form-label mt-4">Password</label>
+                        <input class="form-control" type="password" id="txtLoginPassword">
                     </div>
 
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnLogin">Login</button>
 
-                    <button class="btn btn-light mt-3 col-12" type="button">Forgot Password</button>
+                    <button id="btnForgotPassword" class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Forgot Password?</button>
+
+                </form>
+        </div>
+
+        <div id="divForgotPassword" class="col-6 offset-3 pt-5" style="display:none;">
+            <div class="card-body">
+                <div class="text-center">
+                    <h2>Forgot Your Password?</h2>
+                    <h5>Please Enter the Email You Used to Sign Up For Chicken Coop</h5>
+                </div>
+                <form id="formLogin">
+                    <div class="form-group">
+                        <label for="txtRecoveryEmail" class="form-label mt-4">Email</label>
+                        <input class="form-control" type="email" id="txtRecoveryEmail">
+                    </div>
+
+                    <button class="btn btn-info mt-3 col-12" type="button" id="btnRequestPasswordReset">Request Password Reset</button>
+
+                    <button class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Back To Sign In</button>
 
                 </form>
         </div>
@@ -125,68 +155,144 @@
     <script src="js/sweetalert2@11.js"></script>
     <script>
 
+
         $('.btnSwap').on('click',function(){
             // Use this click handler to toggle the view of the user registration and login <div> elements
             $('#divLogin').slideToggle();
             $('#divRegistration').slideToggle();
         })
 
+        $('#txtIsCoopSameAsPersonal').on('change', function(){
+            $('#formStreet1').removeClass('d-none');
+            $('#formStreet2').removeClass('d-none');
+            $('#formCity').removeClass('d-none');
+            $('#formState').removeClass('d-none');
+            $('#formZip').removeClass('d-none');
+
+        })
+
+        //does not fully work yet. when trying to toggle, everything disappears
+        $('.btnSwapForgot').on('click',function(){
+            $('#divForgotPassword').slideToggle();
+            //$('#divLogin').slideToggle();
+        })
+
         $('#btnRegister').on('click',function(){
-            let strEmail;
-            let strFirstName;
-            let strLastName;
-            let strPassword;
-            let strAddress;
-            let strCoop;
+            let strCoopStreet1;
+            let strCoopStreet2;
+            let strCoopCity;
+            let strCoopState;
+            let strCoopZip;
+            let strEmail = $('#txtCreateEmail').val();
+            let strFirstName = $('#txtCreateFirstName').val();
+            let strLastName = $('#txtCreateLastName').val();
+            let strPassword = $('#txtCreatePassword').val();
+            let strStreet1 = $('#txtCreateAStreet1').val();
+            let strStreet2 = $('#txtCreateAStreet2').val();
+            let strCity = $('#txtCreateACity').val();
+            let strState = $('#txtCreateAState').val();
+            let strZip = $('#txtCreateAZIP').val();
+            if(!$('#txtCoopNotSameAsPersonal').is(':checked')){
+                strCoopStreet1 = $('#txtCreateAStreet1').val();
+                strCoopStreet2 = $('#txtCreateAStreet2').val();
+                strCoopCity = $('#txtCreateACity').val();
+                strCoopState = $('#txtCreateAState').val();
+                strCoopZip = $('#txtCreateAZIP').val();
+            } else {
+                strCoopStreet1 = $('#txtCreateBStreet1').val();
+                strCoopStreet2 = $('#txtCreateBStreet2').val();
+                strCoopCity = $('#txtCreateBCity').val();
+                strCoopState = $('#txtCreateBState').val();
+                strCoopZip = $('#txtCreateBZIP').val();
+            }
+            let strCode = $('#txtCreateCode').val();
+        
                 
             let blnError = false; 
             let strErrorMessage = ''; 
 
-
-            if(!$('#txtCreateEmail').val()){ 
+            if(!strEmail){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter an email.</p>'
-            } else if(!isValidEmail($('#txtCreateEmail').val())){
+            } else if(strEmail && !isValidEmail(strEmail)){
                 blnError = true;
-                strErrorMessage += '<p> you must enter a valid email address:</p>'
+                strErrorMessage += '<p> you must enter a valid email address</p>'
             }
 
 
-            if(!$('#txtCreatePassword').val()){ 
+            if(!strPassword){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a password.</p>'
-            }else if(!isValidPassword($('#txtCreatePassword').val())){
+            }else if(strPassword && !isValidPassword(strPassword)){
                 blnError = true;
-                strErrorMessage += '<p> you must enter a valid password containing: a capital letter (A), a lowercase letter(a) a number(0-9) and a special character(*) :</p>'
+                strErrorMessage += '<p> you must enter a valid password containing: a capital letter (A), a lowercase letter(a) a number(0-9) and a special character(*)</p>'
             }
 
             
-            if(!$('#txtCreateFirstName').val()){ 
+            if(!strFirstName){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a first name.</p>'
             } 
             
 
-            if(!$('#txtCreateLastName').val()){ 
+            if(!strLastName){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a last name.</p>'
             } 
 
-            if(!$('#txtCreateAddress').val()){ 
+            if(!strStreet1){ 
                 blnError = true; 
-                strErrorMessage += '<p> you must enter am address.</p>'
+                strErrorMessage += '<p> you must enter a street.</p>'
             }
 
-            if(!$('#txtCreateCoop').val()){ 
+            if(!strCity){ 
                 blnError = true; 
-                strErrorMessage += '<p> you must enter a coop.</p>'
-            } 
+                strErrorMessage += '<p> you must enter a city.</p>'
+            }
+
+            if(!strState){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a state.</p>'
+            }
+
+            if(!strZip){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a zipcode.</p>'
+            }
+
+            if(!strCoopStreet1){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a coop street.</p>'
+            }
+
+            if(!strCoopCity){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a coop city.</p>'
+            }
+
+            if(!strCoopState){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a coop state.</p>'
+            }
+
+            if(!strCoopZip){ 
+                blnError = true; 
+                strErrorMessage += '<p> you must enter a coop zipcode.</p>'
+            }
+
+            if(!strCode){
+                blnError = true;
+                strErrorMessage += '<p> you must enter a coop identification code.</p>'
+            }
 
             if(blnError == true){
                 Swal.fire({
                     type: 'error',
+                    title: "Oh No",
                     html: strErrorMessage
                 })
+            } else{
+                console.log('Success');
             }
             
             
@@ -195,7 +301,7 @@
 
         function isValidEmail(strEmail){
             let regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            return regEmail.test(strEmailAddress);
+            return regEmail.test(strEmail);
         }
         function isValidPassword(strPassword){
             let regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/;
@@ -203,6 +309,29 @@
         }
 
         $('#btnLogin').on('click', function(){
+            let strEmail = $('#txtLoginEmail').val();
+            let strPassword = $('#txtLoginPassword').val();
+
+            let blnError = false;
+            let strErrorMessage = '';
+            if(!strEmail){
+                blnError = true;
+                strErrorMessage += '<p>Email cannot be blank</p>';
+            }
+            if(!strPassword){
+                blnError = true;
+                strErrorMessage += '<p>Password cannot be blank</p>';
+            }
+
+            if(blnError == true){
+                Swal.fire({
+                    type: 'error',
+                    title: "Oh No",
+                    html: strErrorMessage
+                })
+            } else{
+                console.log('Success');
+            }
             
         })
 
