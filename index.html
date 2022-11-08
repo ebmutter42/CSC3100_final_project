@@ -256,8 +256,8 @@
 
         //does not fully work yet. when trying to toggle, everything disappears
         $('.btnSwapForgot').on('click',function(){
-            $('#divForgotPassword').slideToggle();
-            //$('#divLogin').slideToggle();
+            $('#divForgotPassword').slideToggle('d-none');
+            $('#divLogin').slideToggle('d-none');
         })
 
         $('#btnRegister').on('click',function(){
