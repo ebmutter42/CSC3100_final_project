@@ -28,11 +28,11 @@
             </div>
         </div>-->
         <div class="collapse" id="navbarToggleExternalContent">
-            <div class="bg-warning p-4">
-                <h5 class="text-white h4">Dashboard</h5>
-                <h5 class="text-white h4">Settings</h5>
-                <h5 class="text-white h4">Warnings</h5>
-                <h5 class="text-white h4">Logout</h5>
+            <div class="bg-warning p-4 d-flex">
+                <h5 class="text-white h4" style="padding-left:15px;">Dashboard</h5>
+                <h5 class="text-white h4" style="padding-left:25px;">Settings</h5>
+                <h5 class="text-white h4" style="padding-left:25px;">Warnings</h5>
+                <h5 class="text-white h4" style="padding-left:25px;">Logout</h5>
             </div>
         </div>
         <nav class="navbar navbar-warning bg-warning">
@@ -179,8 +179,55 @@
             </div>
         </div>
 
-        <div id="divDashboard">
+        <div id="divDashboard" class="col-10 offset-1 pt-5 text-center">
+            <div class="d-flex text-light">
+                <div class="card m-2 bg-success">
+                    <div class="card-header">
+                        <h2>Eggs Harvested This Year</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>/Temp/</h2>
+                    </div>
+                </div>
+                <div class="card m-2 bg-info">
+                    <div class="card-header">
+                        <h2>Current Temperature</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>/Temp/</h2>
+                    </div>
+                </div>
+                <div class="card m-2 bg-danger">
+                    <div class="card-header">
+                        <h2>Current Humidity</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>/Temp/</h2>
+                    </div>
+                </div>
+                <div class="card m-2 bg-warning">
+                    <div class="card-header">
+                        <h2>Days Until Clean Out</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>/Temp/</h2>
+                    </div>
+                </div>
+            </div>
 
+            <div>
+
+                <div class="card col-12 m-2 bg-light">
+                    <div class="card-header">
+                        <h2>Graph</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>/Temp/</h2>
+                    </div>
+                </div>
+
+            </div>
+            
         </div>
         
     
@@ -369,6 +416,10 @@
                 console.log('Success');
             }
             
+        })
+
+        $('#btnRequestPasswordReset').on('click', function(){
+
         })
 
     </script>
