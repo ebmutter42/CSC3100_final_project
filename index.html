@@ -28,23 +28,24 @@
 
             </div>
         </div>-->
-
+        
         <nav class="navbar navbar-warning bg-warning sticky-top">
             <div class="container-fluid">
-
-                <div class="d-flex col-8 offset-4 text-center">
-                    <img src="chicken.png" alt="Chicken" width="100" height="100" class="m-3">
-                    <div class="m-4">
-                        <h1>Chicken Coop</h1>
-                        <h4>Where Farmers Connect</h4>
+                
+                <div class="d-flex col-12 align-items-center">
+                    <button id="btnSideBar" class="navbar-toggler d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="d-flex col-6 offset-4 text-center">
+                        <img src="chicken.png" alt="Chicken" width="80" height="80" class="m-3">
+                        <div class="m-4">
+                            <h2>Chicken Coop</h2>
+                            <h5>Where Farmers Connect</h5>
+                        </div>
                     </div>
                 </div>
-
-            <!--add class of d-none after API implementation-->
-                <button id="btnSideBar" class="navbar-toggler d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
+                
                 <div class="offcanvas offcanvas-end text-bg-warning" tabindex="-1" id="sideBar" >
                     <div class="offcanvas-header">
                         <h2></h2>
@@ -89,17 +90,15 @@
                 </div>
             </div>
         </nav>
-
-
-
-            
+        
+        
         <div id="divRegistration" class="col-6 offset-3 pt-5" style="display:none;">
             <div class="card-body">
                 <div class="text-center">
                     <h2>Create Your Chicken Coop Account</h2>
                     <h5>If you already have a Chicken Coop account, please use it to <button id="btnGoToLogin" type="button" class="btnSwap">sign in</button></h5>
-                
                 </div>
+                
                 <form>
                     <div class="form-group">
                         <label for="txtCreateFirstName" class="form-label mt-4">First Name</label>
@@ -167,7 +166,7 @@
                         <label for="txtCreateBZIP" class="form-label mt-4">ZIP</label>
                         <input class="form-control" type="text" id="txtCreateBZIP">
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="txtCreateCode" class="form-label mt-4">Enter a code consisting of letters and numbers which will be associated with your Coop:</label>
                         <input class="form-control" type="text" id="txtCreateCode">
@@ -176,13 +175,14 @@
                 <button id="btnRegister" class="btn btn-info col-12 mt-3 mb-5" type="button">Create Account</button>
             </div>
         </div>
-
+        
         <div id="divLogin" class="col-6 offset-3 pt-5">
             <div class="card-body">
                 <div class="text-center">
                     <h2>Sign In</h2>
                     <h5>New to Chicken Coop? Create An Account <button id="btnGoToRegistration" type="button" class="btnSwap">here</button></h5>
                 </div>
+                
                 <form id="formLogin">
                     <div class="form-group">
                         <label for="txtLoginEmail" class="form-label mt-4">Email</label>
@@ -192,38 +192,34 @@
                         <label for="txtLoginPassword" class="form-label mt-4">Password</label>
                         <input class="form-control" type="password" id="txtLoginPassword">
                     </div>
-
+                    
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnLogin">Login</button>
-
                     <button id="btnForgotPassword" class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Forgot Password?</button>
-
                 </form>
             </div>
         </div>
-
+        
         <div id="divForgotPassword" class="col-6 offset-3 pt-5" style="display:none;">
-
             <div class="card-body">
                 <div class="text-center">
                     <h2>Forgot Your Password?</h2>
                     <h5>Please Enter the Email You Used to Sign Up For Chicken Coop</h5>
                 </div>
+                
                 <form id="formLogin">
                     <div class="form-group">
                         <label for="txtRecoveryEmail" class="form-label mt-4">Email</label>
                         <input class="form-control" type="email" id="txtRecoveryEmail">
                     </div>
-
+                    
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnRequestPasswordReset">Request Password Reset</button>
-
                     <button class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Back To Sign In</button>
-
                 </form>
             </div>
         </div>
-
+        
         <div id="divDashboard" class="col-10 offset-1 pt-5 text-center" style="display:none">
-            <div class="d-block d-md-flex text-light">
+            <div class="d-block d-lg-flex text-light">
                 <div class="card m-2 bg-success">
                     <div class="card-header">
                         <h2>Eggs Harvested This Year</h2>
@@ -257,49 +253,80 @@
                     </div>
                 </div>
             </div>
-
+            
             <div>
-
                 <div class="card col-12 m-2 bg-light">
                     <div class="card-header">
                         <h2>Temperature & Humidity This Week</h2>
                     </div>
                     <div class="card-body">
                         <canvas id="myChart" ></canvas>
-                            
+                        
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <div id="divSettings" style="display:none;">
+            <div id="divSettingsBody">
+                <div class="card m-2 bg-success">
+                    <div class="card-header">
+                        <h2 style="color:rgb(0, 0, 0);">Automatic Settings</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2>Coop Door Opens at 9:00am</h2>
+                        <h2>Coop Door Closes at 10:00pm</h2>
 
+                        <h2>Coop Lights Turn On at 9:00am</h2>
+                        <h2>Coop Lights Turn Off at 10:00pm</h2>
+                        
+                        <h2>Coop Heater Turns On at 35&#176;</h2>
+                        <h2>Coop Fan Turns On at 80&#176;</h2>
+                        
+                        <h2>Low Water Alarm set for 30%</h2>
+                        <h2>Low Food Alarm set for 20%</h2>
+
+                        <!-- add button & input options to change settings -->
+                    </div>
+                </div>
+                
+                <div class="card m-2 bg-danger">
+                    <div class="card-header">
+                        <h2 style="color:rgb(0, 0, 0);">Manual Triggers</h2>
+                    </div>
+                    <div class="card-body">
+                        <h2><button id="btnHeaterOn" type="button" class="">Turn On Heater</button></h2>
+                        <h2><button id="btnHeaterOff" type="button" class="">Turn Off Heater</button></h2>
+                        
+                        <h2><button id="btnFanOn" type="button" class="">Turn On Fan</button></h2>
+                        <h2><button id="btnFanOff" type="button" class="">Turn Off Fan</button></h2>
+                        
+                        <h2><button id="btnLightOn" type="button" class="">Turn On Lights</button></h2>
+                        <h2><button id="btnLightOff" type="button" class="">Turn Off Lights</button></h2>
+                    </div>
+                </div>
             </div>
             
         </div>
-
-        <div id="divSettings">
-
-        </div>
-        
-    
     </div>
-
+    
     <script src="js/jquery-3.6.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/sweetalert2@11.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script>
-
         today = new Date();
         var cleanout = new Date('01/15/2023');
         var Difference_In_Time = cleanout.getTime() - today.getTime();
         var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
         $('#txtDaysToClean').text(Difference_In_Days);
-
-
+        
         $('.btnSwap').on('click',function(){
             // Use this click handler to toggle the view of the user registration and login <div> elements
             $('#divLogin').slideToggle('d-none');
             $('#divRegistration').slideToggle('d-none');
         })
-
+        
         $('#txtIsCoopSameAsPersonal').on('change', function(){
             $('#formStreet1').removeClass('d-none');
             $('#formStreet2').removeClass('d-none');
@@ -308,13 +335,13 @@
             $('#formZip').removeClass('d-none');
 
         })
-
+        
         //does not fully work yet. when trying to toggle, everything disappears
         $('.btnSwapForgot').on('click',function(){
             $('#divForgotPassword').slideToggle('d-none');
             $('#divLogin').slideToggle('d-none');
         })
-
+        
         $('#btnRegister').on('click',function(){
             let strCoopStreet1;
             let strCoopStreet2;
@@ -344,11 +371,10 @@
                 strCoopZip = $('#txtCreateBZIP').val();
             }
             let strCode = $('#txtCreateCode').val();
-        
                 
             let blnError = false; 
             let strErrorMessage = ''; 
-
+            
             if(!strEmail){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter an email.</p>'
@@ -356,8 +382,8 @@
                 blnError = true;
                 strErrorMessage += '<p> you must enter a valid email address</p>'
             }
-
-
+            
+            
             if(!strPassword){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a password.</p>'
@@ -365,64 +391,62 @@
                 blnError = true;
                 strErrorMessage += '<p> you must enter a valid password containing: a capital letter (A), a lowercase letter(a) a number(0-9) and a special character(*)</p>'
             }
-
             
             if(!strFirstName){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a first name.</p>'
-            } 
+            }
             
-
             if(!strLastName){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a last name.</p>'
-            } 
-
+            }
+            
             if(!strStreet1){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a street.</p>'
             }
-
+            
             if(!strCity){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a city.</p>'
             }
-
+            
             if(!strState){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a state.</p>'
             }
-
+            
             if(!strZip){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a zipcode.</p>'
             }
-
+            
             if(!strCoopStreet1){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop street.</p>'
             }
-
+            
             if(!strCoopCity){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop city.</p>'
             }
-
+            
             if(!strCoopState){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop state.</p>'
             }
-
+            
             if(!strCoopZip){ 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop zipcode.</p>'
             }
-
+            
             if(!strCode){
                 blnError = true;
                 strErrorMessage += '<p> you must enter a coop identification code.</p>'
             }
-
+            
             if(blnError == true){
                 Swal.fire({
                     type: 'error',
@@ -432,20 +456,17 @@
             } else{
                 console.log('Success');
             }
-
-
+            
+            
             $('#divDashboard').slideToggle('d-none');
             $('#divRegistration').slideToggle('d-none');
-
+            
             //uncomment after API implemented
             $('#btnSideBar').removeClass('d-none');
             $('#sideBar').removeClass('d-none');
-
-            
-            
         })
-
-
+        
+        
         function isValidEmail(strEmail){
             let regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
             return regEmail.test(strEmail);
@@ -454,11 +475,11 @@
             let regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/;
             return regPassword.test(strPassword);
         }
-
+        
         $('#btnLogin').on('click', function(){
             let strEmail = $('#txtLoginEmail').val();
             let strPassword = $('#txtLoginPassword').val();
-
+            
             let blnError = false;
             let strErrorMessage = '';
             if(!strEmail){
@@ -469,7 +490,7 @@
                 blnError = true;
                 strErrorMessage += '<p>Password cannot be blank</p>';
             }
-
+            
             if(blnError == true){
                 Swal.fire({
                     type: 'error',
@@ -479,33 +500,29 @@
             } else{
                 console.log('Success');
             }
-
+            
             $('#divDashboard').slideToggle('d-none');
             $('#divLogin').slideToggle('d-none');
-
+            
             //uncomment after API implemented
             $('#btnSideBar').removeClass('d-none');
             $('#sideBar').removeClass('d-none');
-
+        })
+        
+        $('#btnRequestPasswordReset').on('click', function(){
             
         })
-
-        $('#btnRequestPasswordReset').on('click', function(){
-
-        })
-
+        
         $('#linkDashboard').on('click', function(){
             $('#divDashboard').slideToggle('d-none');
-
-
+            
         })
-
+        
         $('#linkSettings').on('click', function(){
             $('#divDashboard').slideToggle('d-none');
-
             $('#divSettings').slideToggle('d-none');
         })
-
+        
         $('#linkWarnings').on('click', function(){
             Swal.fire({
                     type: 'error',
@@ -513,7 +530,7 @@
                     text: 'WARNINGS'
                 })
         })
-
+        
         $('#linkLogout').on('click', function(){
             $('#divDashboard').slideToggle('d-none');
             $('#divLogin').slideToggle('d-none');
@@ -521,13 +538,10 @@
             //uncomment after API is implemented
             $('#btnSideBar').addClass('d-none');
             $('#sideBar').addClass('d-none');
-
         })
-
     </script>
-
+    
     <script>
-                                    
         const ctx = document.getElementById('myChart').getContext('2d');
         var xValues = ['11/11/22','11/12/22','11/13/22','11/14/22','11/15/22','11/16/22','11/17/22'];
         const myChart = new Chart(ctx, {
@@ -535,19 +549,19 @@
             data: {
                 labels: xValues,
                 datasets: [{
-                //temp
-                label: 'Temperature',
-                yAxisID: 'Temperature',
-                data: [22.09,22.34,21.36,20.3,25.6,21.45,23.01,22.09,22.34,23.36,24.3,25.6,26.45,27.52,25.09,28.34,30.36,35.3,30.6,26.45,24.52],
-                borderColor: "red",
-                fill: false
-                },{
-                //humidity
-                label: 'Humidity',
-                yAxisID: 'Humidity',
-                data: [45.24,51.06,49.05,46.39,54.71,49.33,47.88,45.24,43.06,42.05,46.39,53.71,43.05,40.88,45.24,47.06,49.05,46.39,48.71,55.33,50.88],
-                borderColor: "green",
-                fill: false
+                    //temp
+                    label: 'Temperature',
+                    yAxisID: 'Temperature',
+                    data: [22.09,22.34,21.36,20.3,25.6,21.45,23.01,22.09,22.34,23.36,24.3,25.6,26.45,27.52,25.09,28.34,30.36,35.3,30.6,26.45,24.52],
+                    borderColor: "red",
+                    fill: false
+                }, {
+                    //humidity
+                    label: 'Humidity',
+                    yAxisID: 'Humidity',
+                    data: [45.24,51.06,49.05,46.39,54.71,49.33,47.88,45.24,43.06,42.05,46.39,53.71,43.05,40.88,45.24,47.06,49.05,46.39,48.71,55.33,50.88],
+                    borderColor: "blue",
+                    fill: false
                 }]
             },
             options: {
@@ -567,8 +581,6 @@
                 }
             }
         });
-
-
     </script>
 </body>
 </html>
