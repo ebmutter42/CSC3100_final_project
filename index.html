@@ -14,6 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken Coop Application</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -267,42 +269,101 @@
             </div>
         </div>
         
-        <div id="divSettings" style="display:none;">
+        <div id="divSettings" style="display:none;" class="text-dark">
             <div id="divSettingsBody">
-                <div class="card m-2 bg-success">
+                <div class="card m-2 bg-danger">
                     <div class="card-header">
-                        <h2 style="color:rgb(0, 0, 0);">Automatic Settings</h2>
+                        <h2 class="text-light">Automatic Settings</h2> <!-- style="color:rgb(0, 0, 0); -->
                     </div>
                     <div class="card-body">
-                        <h2>Coop Door Opens at 9:00am</h2>
-                        <h2>Coop Door Closes at 10:00pm</h2>
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Door Opens at <a id="timeDoorOpens">9:00am</a></h2>
+                            <input type="time" id="inputTimeDoorOpens" class="col-3 m-2">
+                            <button id="btnTimeDoorOpens" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
 
-                        <h2>Coop Lights Turn On at 9:00am</h2>
-                        <h2>Coop Lights Turn Off at 10:00pm</h2>
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Door Closses at <a id="timeDoorCloses">10:00pm</a></h2>
+                            <input type="time" id="inputTimeDoorCloses" class="col-3 m-2">
+                            <button id="btnTimeDoorCloses" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
                         
-                        <h2>Coop Heater Turns On at 35&#176;</h2>
-                        <h2>Coop Fan Turns On at 80&#176;</h2>
-                        
-                        <h2>Low Water Alarm set for 30%</h2>
-                        <h2>Low Food Alarm set for 20%</h2>
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Lights Turn On at <a id="timeLightsOn">9:00am</a></h2>
+                            <input type="time" id="inputTimeLightsOn" class="col-3 m-2">
+                            <button id="btnTimeLightsOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
 
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Lights Turn Off at <a id="timeLightsOff">10:00pm</a></h2>
+                            <input type="time" id="inputTimeLightsOff" class="col-3 m-2">
+                            <button id="btnTimeLightsOff" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Heater Turns On at <a id="tempHeaterOn">35</a>&#176;</h2>
+                            <input type="number" id="inputTempHeaterOn" class="col-3 m-2">
+                            <button id="btnTempHeaterOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Coop Fan Turns On at <a id="tempFanOn">80</a>&#176;</h2>
+                            <input type="number" id="inputTempFanOn" class="col-3 m-2">
+                            <button id="btnTempFanOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Low Water Alarm Set For <a id="percentLowWater">30</a>%</h2>
+                            <input type="number" id="inputPercentLowWater" class="col-3 m-2">
+                            <button id="btnPercentLowWater" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
+
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Low Food Alarm Set For <a id="percentLowFood">20</a>%</h2>
+                            <input type="number" id="inputPercentLowFood" class="col-3 m-2">
+                            <button id="btnPercentLowFood" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        </div>
                         <!-- add button & input options to change settings -->
                     </div>
                 </div>
                 
-                <div class="card m-2 bg-danger">
+                <div class="card m-2 bg-success">
                     <div class="card-header">
-                        <h2 style="color:rgb(0, 0, 0);">Manual Triggers</h2>
+                        <h2 class="text-light">Manual Triggers</h2> <!-- style="color:rgb(0, 0, 0);" -->
                     </div>
                     <div class="card-body">
-                        <h2><button id="btnHeaterOn" type="button" class="">Turn On Heater</button></h2>
-                        <h2><button id="btnHeaterOff" type="button" class="">Turn Off Heater</button></h2>
+                        <!--<h2><button id="btnHeaterOn" type="button" class="">Turn On Heater</button></h2>
+                        <h2><button id="btnHeaterOff" type="button" class="">Turn Off Heater</button></h2>-->
+                        <div class="d-flex">
+                            <h2 class="col-6">Door State</h2>
+                            <div class="form-check form-switch col-6">
+                                <input type="checkbox" checked data-toggle="toggle" data-width="100" data-on="Open" data-off="Closed">
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Fan State</h2>
+                            <div class="form-check form-switch col-6">
+                                <input type="checkbox" checked data-toggle="toggle" data-width="100">
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <h2 class="col-6">Light State</h2>
+                            <div class="form-check form-switch col-6 d-flex">
+                                <input type="checkbox" checked data-toggle="toggle" data-width="100">
+                            </div>
+                        </div>
+
+
                         
-                        <h2><button id="btnFanOn" type="button" class="">Turn On Fan</button></h2>
+                        <!--<h2><button id="btnFanOn" type="button" class="">Turn On Fan</button></h2>
                         <h2><button id="btnFanOff" type="button" class="">Turn Off Fan</button></h2>
                         
                         <h2><button id="btnLightOn" type="button" class="">Turn On Lights</button></h2>
-                        <h2><button id="btnLightOff" type="button" class="">Turn Off Lights</button></h2>
+                        <h2><button id="btnLightOff" type="button" class="">Turn Off Lights</button></h2>-->
                     </div>
                 </div>
             </div>
@@ -314,6 +375,8 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/sweetalert2@11.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
     <script>
         today = new Date();
         var cleanout = new Date('01/15/2023');
@@ -538,6 +601,82 @@
             //uncomment after API is implemented
             $('#btnSideBar').addClass('d-none');
             $('#sideBar').addClass('d-none');
+        })
+
+
+
+        //settings button clicks
+
+        $('#btnTimeDoorOpens').on('click', function(){
+            strDoorOpens = $('#inputTimeDoorOpens').val();
+
+            if (strDoorOpens != null) {
+                $('#timeDoorOpens').text(strDoorOpens);
+            }
+            
+        })
+        
+        $('#btnTimeDoorCloses').on('click', function(){
+            strDoorCloses = $('#inputTimeDoorCloses').val();
+
+            if (strDoorCloses != null) {
+                $('#timeDoorCloses').text(strDoorCloses);
+            }
+            
+        })
+        
+        $('#btnTimeLightsOn').on('click', function(){
+            strLightsOn = $('#inputTimeLightsOn').val();
+
+            if (strLightsOn != null) {
+                $('#timeLightsOn').text(strLightsOn);
+            }
+            
+        })
+        
+        $('#btnTimeLightsOff').on('click', function(){
+            strLightsOff = $('#inputTimeLightsOff').val();
+
+            if (strLightsOff != null) {
+                $('#timeLightsOff').text(strLightsOff);
+            }
+            
+        })
+        
+        $('#btnTempHeaterOn').on('click', function(){
+            strHeaterOn = $('#inputTempHeaterOn').val();
+
+            if (strHeaterOn != null) {
+                $('#tempHeaterOn').text(strHeaterOn);
+            }
+            
+        })
+        
+        $('#btnTempFanOn').on('click', function(){
+            strFanOn = $('#inputTempFanOn').val();
+
+            if (strFanOn != null) {
+                $('#tempFanOn').text(strFanOn);
+            }
+            
+        })
+        
+        $('#btnPercentLowWater').on('click', function(){
+            strLowWater = $('#inputPercentLowWater').val();
+
+            if (strLowWater != null) {
+                $('#percentLowWater').text(strLowWater);
+            }
+            
+        })
+        
+        $('#btnPercentLowFood').on('click', function(){
+            strLowFood = $('#inputPercentLowFood').val();
+
+            if (strLowFood != null) {
+                $('#percentLowFood').text(strLowFood);
+            }
+            
         })
     </script>
     
