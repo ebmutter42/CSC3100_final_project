@@ -35,23 +35,24 @@
             <div class="container-fluid">
                 
                 <div class="d-flex col-12 align-items-center">
-                    <button id="btnSideBar" class="navbar-toggler d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar">
-                        <span class="navbar-toggler-icon" aria-label="Navigation Menu"></span>
-                    </button>
                     
-                    <div class="d-flex col-6 offset-4 text-center">
+                    <div class="d-flex col-7 offset-4 text-center">
                         <img src="chicken.png" alt="Chicken Logo" width="80" height="80" class="m-3">
                         <div class="m-4">
                             <h2>Chicken Coop</h2>
                             <h5>Where Farmers Connect</h5>
                         </div>
                     </div>
+
+                    <button id="btnSideBar" class="navbar-toggler d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar">
+                        <span class="navbar-toggler-icon" aria-label="Navigation Menu"></span>
+                    </button>
                 </div>
                 
                 <div class="offcanvas offcanvas-end text-bg-warning" tabindex="-1" id="sideBar" >
                     <div class="offcanvas-header">
                         <h2></h2>
-                        <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        <button id="btnCloseNav" type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
@@ -182,7 +183,7 @@
             <div class="card-body">
                 <div class="text-center">
                     <h2>Sign In</h2>
-                    <h5>New to Chicken Coop? Create An Account <button id="btnGoToRegistration" type="button" class="btnSwap" aria-label="Press to go to account creation">here</button></h5>
+                    <h5>New to Chicken Coop? Create An Account <button id="btnGoToRegistration" type="button" aria-label="Press to go to account creation">here</button></h5>
                 </div>
                 
                 <form id="formLogin">
@@ -196,7 +197,7 @@
                     </div>
                     
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnLogin">Login</button>
-                    <button id="btnForgotPassword" class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Forgot Password?</button>
+                    <button id="btnForgotPassword" class="btn btn-link mt-3 col-12" type="button">Forgot Password?</button>
                 </form>
             </div>
         </div>
@@ -215,7 +216,7 @@
                     </div>
                     
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnRequestPasswordReset">Request Password Reset</button>
-                    <button class="btn btn-link mt-3 col-12 btnSwapForgot" type="button">Back To Sign In</button>
+                    <button class="btn btn-link mt-3 col-12" type="button" id="btnBackToSignIn">Back To Sign In</button>
                 </form>
             </div>
         </div>
@@ -235,7 +236,7 @@
                         <h2>Current Temperature</h2>
                     </div>
                     <div class="card-body">
-                        <h2>20.04 C</h2>
+                        <h2>20.04 &#176;C</h2>
                     </div>
                 </div>
                 <div class="card m-2 bg-danger">
@@ -269,9 +270,9 @@
             </div>
         </div>
         
-        <div id="divSettings" style="display:none;" class="text-dark">
+        <div id="divSettings" style="display:none;" class="text-light">
             <div id="divSettingsBody">
-                <div class="card m-2 bg-danger">
+                <div class="card m-2 bg-info">
                     <div class="card-header">
                         <h2 class="text-light">Automatic Settings</h2> <!-- style="color:rgb(0, 0, 0); -->
                     </div>
@@ -378,16 +379,27 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <script>
+        let arrActive = [];
+        $('#divLogin').addClass('active');
+        arrActive.push('#divLogin');
+
+
         today = new Date();
         var cleanout = new Date('01/15/2023');
         var Difference_In_Time = cleanout.getTime() - today.getTime();
         var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
         $('#txtDaysToClean').text(Difference_In_Days);
         
-        $('.btnSwap').on('click',function(){
+        $('#btnGoToRegistration').on('click',function(){
             // Use this click handler to toggle the view of the user registration and login <div> elements
-            $('#divLogin').slideToggle('d-none');
-            $('#divRegistration').slideToggle('d-none');
+            handleArrActive(arrActive, '#divRegistration');
+
+        })
+
+        $('#btnGoToLogin').on('click',function(){
+            // Use this click handler to toggle the view of the user registration and login <div> elements
+            handleArrActive(arrActive, '#divLogin');
+
         })
         
         $('#txtIsCoopSameAsPersonal').on('change', function(){
@@ -399,10 +411,14 @@
 
         })
         
-        //does not fully work yet. when trying to toggle, everything disappears
-        $('.btnSwapForgot').on('click',function(){
-            $('#divForgotPassword').slideToggle('d-none');
-            $('#divLogin').slideToggle('d-none');
+        $('#btnBackToSignIn').on('click',function(){
+            handleArrActive(arrActive, '#divLogin');
+
+        })
+
+        $('#btnForgotPassword').on('click',function(){
+            handleArrActive(arrActive, '#divForgotPassword');
+
         })
         
         $('#btnRegister').on('click',function(){
@@ -521,8 +537,13 @@
             }
             
             
-            $('#divDashboard').slideToggle('d-none');
+            /*$('#divDashboard').slideToggle('d-none');
             $('#divRegistration').slideToggle('d-none');
+
+            $('#divDashboard').addClass('active');
+            arrActive.push('#divDashboard');*/
+            handleArrActive(arrActive, '#divDashboard');
+
             
             //uncomment after API implemented
             $('#btnSideBar').removeClass('d-none');
@@ -564,8 +585,12 @@
                 console.log('Success');
             }
             
-            $('#divDashboard').slideToggle('d-none');
+            /*$('#divDashboard').slideToggle('d-none');
             $('#divLogin').slideToggle('d-none');
+
+            $('#divDashboard').addClass('active');
+            arrActive.push('#divDashboard');*/
+            handleArrActive(arrActive, '#divDashboard');
             
             //uncomment after API implemented
             $('#btnSideBar').removeClass('d-none');
@@ -577,13 +602,13 @@
         })
         
         $('#linkDashboard').on('click', function(){
-            $('#divDashboard').slideToggle('d-none');
-            
+            handleArrActive(arrActive, '#divDashboard');
+            $('#btnCloseNav').click();
         })
         
         $('#linkSettings').on('click', function(){
-            $('#divDashboard').slideToggle('d-none');
-            $('#divSettings').slideToggle('d-none');
+            handleArrActive(arrActive, '#divSettings');
+            $('#btnCloseNav').click();
         })
         
         $('#linkWarnings').on('click', function(){
@@ -595,13 +620,34 @@
         })
         
         $('#linkLogout').on('click', function(){
-            $('#divDashboard').slideToggle('d-none');
-            $('#divLogin').slideToggle('d-none');
+            handleArrActive(arrActive, '#divLogin');
 
             //uncomment after API is implemented
             $('#btnSideBar').addClass('d-none');
-            $('#sideBar').addClass('d-none');
+            $('#btnCloseNav').click();
+
         })
+
+
+        function handleArrActive(arrActive, curElement){
+            console.log(arrActive);
+            for (let element of arrActive) {
+                $(element).slideToggle('d-none');
+                $(element).removeClass('active');
+                arrActive.pop();
+            };
+
+            handleCurElement(curElement);
+        }
+
+        function handleCurElement(curElement){
+            if (!$(curElement).hasClass('active')){
+                $(curElement).slideToggle('d-none');
+
+                $(curElement).addClass('active');
+                arrActive.push(curElement);
+            }
+        }
 
 
 
@@ -610,7 +656,7 @@
         $('#btnTimeDoorOpens').on('click', function(){
             strDoorOpens = $('#inputTimeDoorOpens').val();
 
-            if (strDoorOpens != null) {
+            if (strDoorOpens != null && strDoorOpens != '') {
                 $('#timeDoorOpens').text(strDoorOpens);
             }
             
@@ -619,7 +665,7 @@
         $('#btnTimeDoorCloses').on('click', function(){
             strDoorCloses = $('#inputTimeDoorCloses').val();
 
-            if (strDoorCloses != null) {
+            if (strDoorCloses != null && strDoorCloses != '') {
                 $('#timeDoorCloses').text(strDoorCloses);
             }
             
@@ -628,7 +674,7 @@
         $('#btnTimeLightsOn').on('click', function(){
             strLightsOn = $('#inputTimeLightsOn').val();
 
-            if (strLightsOn != null) {
+            if (strLightsOn != null && strLightsOn != '') {
                 $('#timeLightsOn').text(strLightsOn);
             }
             
@@ -637,7 +683,7 @@
         $('#btnTimeLightsOff').on('click', function(){
             strLightsOff = $('#inputTimeLightsOff').val();
 
-            if (strLightsOff != null) {
+            if (strLightsOff != null && strLightsOff != '') {
                 $('#timeLightsOff').text(strLightsOff);
             }
             
@@ -646,7 +692,7 @@
         $('#btnTempHeaterOn').on('click', function(){
             strHeaterOn = $('#inputTempHeaterOn').val();
 
-            if (strHeaterOn != null) {
+            if (strHeaterOn != null && strHeaterOn != '') {
                 $('#tempHeaterOn').text(strHeaterOn);
             }
             
@@ -655,7 +701,7 @@
         $('#btnTempFanOn').on('click', function(){
             strFanOn = $('#inputTempFanOn').val();
 
-            if (strFanOn != null) {
+            if (strFanOn != null && strFanOn != '') {
                 $('#tempFanOn').text(strFanOn);
             }
             
@@ -664,7 +710,7 @@
         $('#btnPercentLowWater').on('click', function(){
             strLowWater = $('#inputPercentLowWater').val();
 
-            if (strLowWater != null) {
+            if (strLowWater != null && strLowWater != '') {
                 $('#percentLowWater').text(strLowWater);
             }
             
@@ -673,7 +719,7 @@
         $('#btnPercentLowFood').on('click', function(){
             strLowFood = $('#inputPercentLowFood').val();
 
-            if (strLowFood != null) {
+            if (strLowFood != null && strLowFood != '') {
                 $('#percentLowFood').text(strLowFood);
             }
             
