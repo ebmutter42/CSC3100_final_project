@@ -303,26 +303,26 @@
 
                         <div class="d-flex">
                             <h2 class="col-6">Coop Heater Turns On at <a id="tempHeaterOn">35</a>&#176;</h2>
-                            <input type="number" id="inputTempHeaterOn" class="col-3 m-2" aria-label="Enter New Heater On Temperature">
+                            <input type="number" id="inputTempHeaterOn" class="col-3 m-2" aria-label="Enter New Heater On Temperature" min="-18" max="38">
                             <button id="btnTempHeaterOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
                         </div>
 
                         <div class="d-flex">
                             <h2 class="col-6">Coop Fan Turns On at <a id="tempFanOn">80</a>&#176;</h2>
-                            <input type="number" id="inputTempFanOn" class="col-3 m-2" aria-label="Enter New Fan On Temperature">
+                            <input type="number" id="inputTempFanOn" class="col-3 m-2" aria-label="Enter New Fan On Temperature" min="-18" max="38">
                             <button id="btnTempFanOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
                         </div>
 
                         <div class="d-flex">
                             <h2 class="col-6">Low Water Alarm Set For <a id="percentLowWater">30</a>%</h2>
-                            <input type="number" id="inputPercentLowWater" class="col-3 m-2" aria-label="Enter New Low Water Percentage">
+                            <input type="number" id="inputPercentLowWater" class="col-3 m-2" aria-label="Enter New Low Water Percentage" min="0" max="100">
                             <button id="btnPercentLowWater" type="button" class="col-2 btn btn-light m-2">Submit</button>
                         </div>
 
 
                         <div class="d-flex">
                             <h2 class="col-6">Low Food Alarm Set For <a id="percentLowFood">20</a>%</h2>
-                            <input type="number" id="inputPercentLowFood" class="col-3 m-2" aria-label="Enter New Low Food Percentage">
+                            <input type="number" id="inputPercentLowFood" class="col-3 m-2" aria-label="Enter New Low Food Percentage" min="0" max="100">
                             <button id="btnPercentLowFood" type="button" class="col-2 btn btn-light m-2">Submit</button>
                         </div>
                         <!-- add button & input options to change settings -->
@@ -533,21 +533,72 @@
                     html: strErrorMessage
                 })
             } else{
-                console.log('Success');
-            }
-            
-            
-            /*$('#divDashboard').slideToggle('d-none');
-            $('#divRegistration').slideToggle('d-none');
+                $.post('https://simplecoop.swollenhippo.com/coop.php', {}).done(function(result){
+                    const coop = JSON.parse(result);
 
-            $('#divDashboard').addClass('active');
-            arrActive.push('#divDashboard');*/
-            handleArrActive(arrActive, '#divDashboard');
+                    console.log(coop.CoopID);
+                    if(!coop.CoopID){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Uh Oh...'
+                    })
+                    } else {
+                        $.post('https://simplecoop.swollenhippo.com/users.php', {Email:strEmail, Password:strPassword, FirstName:strFirstName, LastName:strLastName, CoopID:coop.CoopID}).done(function(result){
 
+                        const obj = JSON.parse(result);
+
+                        console.log(obj.Outcome);
+
+                        if(!obj.Outcome){
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Uh Oh...',
+                            text: obj.Error
+                            })
+                            console.log(obj.Error);
+                        } else {
+                            Swal.fire({
+                            icon: 'success',
+                            title: obj.Outcome,
+                            })
+
+                            $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result){
+
+                            console.log(result);
+                            const obj = JSON.parse(result);
+
+                            console.log(obj);
+
+                            if(obj.SessionID){
+                                $('#txtEmail').val('');
+                                $('#txtPassword').val('');
+                                sessionStorage.setItem("SessionID", obj.SessionID)
+
+                                handleArrActive(arrActive, '#divDashboard');
+
+
+                                //uncomment after API implemented
+                                $('#btnSideBar').removeClass('d-none');
+                                $('#sideBar').removeClass('d-none');
+
+                                }
+                                console.log(obj.Outcome);
+                                console.log(obj.Error);
+
+
+                                })
+                            }
+                        })
+
+
+                    }
+                })
+            }   
+
+
+                
             
-            //uncomment after API implemented
-            $('#btnSideBar').removeClass('d-none');
-            $('#sideBar').removeClass('d-none');
+        
         })
         
         
