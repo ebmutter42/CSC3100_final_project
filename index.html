@@ -561,6 +561,7 @@
                             icon: 'success',
                             title: obj.Outcome,
                             })
+                            
 
                             $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result){
 
@@ -573,14 +574,27 @@
                                 $('#txtEmail').val('');
                                 $('#txtPassword').val('');
                                 sessionStorage.setItem("SessionID", obj.SessionID)
+                                let strSessionID = sessionStorage.getItem('SessionID');
 
-                                handleArrActive(arrActive, '#divDashboard');
+                                $.ajax({
+                                    type: "PUT",
+                                    contentType:"application/json; charset=utf-8",
+                                    url: "https://simplecoop.swollenhippo.com/coop.php",
+                                    data: {SessionID: strSessionID, Street1: strCoopStreet1, Street2: strCoopStreet2, City: strCoopCity, State: strCoopState, ZIP: strCoopZip},
+                                    success:function(result){
+                                        handleArrActive(arrActive, '#divDashboard');
 
 
-                                //uncomment after API implemented
-                                $('#btnSideBar').removeClass('d-none');
-                                $('#sideBar').removeClass('d-none');
+                                        //uncomment after API implemented
+                                        $('#btnSideBar').removeClass('d-none');
+                                        $('#sideBar').removeClass('d-none');
+                                    },
+                                    error: function(resultError){
+                                        // Handle any errors here
+                                    }
+                                })
 
+                                
                                 }
                                 console.log(obj.Outcome);
                                 console.log(obj.Error);
@@ -634,18 +648,41 @@
                 })
             } else{
                 console.log('Success');
+
+                $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result){
+
+                    console.log(result);
+                    const obj = JSON.parse(result);
+
+                    console.log(obj);
+
+                    if(obj.SessionID){
+                        $('#txtEmail').val('');
+                        $('#txtPassword').val('');
+                        sessionStorage.setItem("SessionID", obj.SessionID)
+                        let strSessionID = sessionStorage.getItem('SessionID');
+
+                        handleArrActive(arrActive, '#divDashboard');
+            
+                        //uncomment after API implemented
+                        $('#btnSideBar').removeClass('d-none');
+                        $('#sideBar').removeClass('d-none');
+                    } else{
+                        Swal.fire({
+                            type: 'error',
+                            title: "Oh No",
+                            text: "Incorrect Username/Password"
+                        })
+                    }
+                        console.log(obj.Outcome);
+                        console.log(obj.Error);
+
+
+                })
+ 
             }
             
-            /*$('#divDashboard').slideToggle('d-none');
-            $('#divLogin').slideToggle('d-none');
-
-            $('#divDashboard').addClass('active');
-            arrActive.push('#divDashboard');*/
-            handleArrActive(arrActive, '#divDashboard');
-            
-            //uncomment after API implemented
-            $('#btnSideBar').removeClass('d-none');
-            $('#sideBar').removeClass('d-none');
+  
         })
         
         $('#btnRequestPasswordReset').on('click', function(){
