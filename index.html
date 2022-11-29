@@ -1,11 +1,12 @@
 <!--Project by Emily Mutter, Sophia Baker, and Mason Allen-->
 
 <!--Need to add placeholders and aria-labels, 
-    X get slideToggle() functional for divLogin->divForgotPassword,
     regex check coop code,
-    validate forgot password form
-    modify sidebar navigation to work according to active div-->
-
+    validate forgot password form,
+    warnings for highs and lows,
+    check if settings, eggs, and weather exists. if no then post, if yes then put
+    use National Weather Service API to populate weather things
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,27 +16,14 @@
     <title>Chicken Coop Application</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-
 </head>
 
 <body>
     <div class="vh-100">
-        <!--<div id="divHeader" class="col-12 d-none d-lg-block bg-warning sticky-top">
-            <div class="d-flex col-8 offset-4 text-center">
-                <img src="chicken.png" alt="Chicken" width="100" height="100" class="m-3">
-                <div class="m-4">
-                    <h1>Chicken Coop</h1>
-                    <h4>Where Farmers Connect</h4>
-                </div>
-
-            </div>
-        </div>-->
-        
         <nav class="navbar navbar-warning bg-warning sticky-top">
             <div class="container-fluid">
                 
                 <div class="d-flex col-12 align-items-center">
-                    
                     <div class="d-flex col-7 offset-4 text-center">
                         <img src="chicken.png" alt="Chicken Logo" width="80" height="80" class="m-3">
                         <div class="m-4">
@@ -43,7 +31,7 @@
                             <h5>Where Farmers Connect</h5>
                         </div>
                     </div>
-
+                    
                     <button id="btnSideBar" class="navbar-toggler d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar">
                         <span class="navbar-toggler-icon" aria-label="Navigation Menu"></span>
                     </button>
@@ -189,11 +177,11 @@
                 <form id="formLogin">
                     <div class="form-group">
                         <label for="txtLoginEmail" class="form-label mt-4">Email</label>
-                        <input class="form-control" type="email" id="txtLoginEmail" aria-label="Enter Email">
+                        <input class="form-control" type="email" id="txtLoginEmail" aria-label="Enter Email" placeholder="JohnDoe@email.com">
                     </div>
                     <div class="form-group">
                         <label for="txtLoginPassword" class="form-label mt-4">Password</label>
-                        <input class="form-control" type="password" id="txtLoginPassword" aria-label="Enter Password">
+                        <input class="form-control" type="password" id="txtLoginPassword" aria-label="Enter Password" placeholder="Password">
                     </div>
                     
                     <button class="btn btn-info mt-3 col-12" type="button" id="btnLogin">Login</button>
@@ -228,7 +216,8 @@
                         <h2>Eggs Harvested This Year</h2>
                     </div>
                     <div class="card-body">
-                        <h2>204,092</h2>
+                        <button id="txtEggsHarvested">204092</button>
+                        <button onclick="eggIncrement()">Add Egg</button>
                     </div>
                 </div>
                 <div class="card m-2 bg-info">
@@ -236,12 +225,12 @@
                         <h2>Current Temperature</h2>
                     </div>
                     <div class="card-body">
-                        <h2>20.04 &#176;C</h2>
+                        <h2 id="txtTemp">20.04 &#176;C</h2>
                     </div>
                 </div>
                 <div class="card m-2 bg-danger">
                     <div class="card-header">
-                        <h2>Current Humidity</h2>
+                        <h2 id="txtHumidity">Current Humidity</h2>
                     </div>
                     <div class="card-body">
                         <h2>45.08%</h2>
@@ -368,7 +357,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
     
@@ -379,49 +367,74 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <script>
-        let arrActive = [];
-        $('#divLogin').addClass('active');
-        arrActive.push('#divLogin');
-
-
-        today = new Date();
+        let today = new Date();
         var cleanout = new Date('01/15/2023');
         var Difference_In_Time = cleanout.getTime() - today.getTime();
         var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
         $('#txtDaysToClean').text(Difference_In_Days);
         
-        $('#btnGoToRegistration').on('click',function(){
+        let eggsToAdd = 0;
+        
+        $.getJSON('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), days:today}).done(function(result) {
+            const eggs = JSON.parse(result);
+            console.log('eggs');
+            if(!eggs){
+                $.post('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), observationDateTime:today, eggs: eggsToAdd}).done(function(result) {
+                    const newEgg = JSON.parse(result);
+                    if (newEgg.logID){
+                        const logID = newEgg.logID;
+                        console.log('egg create');
+                    }
+                })
+            } else {
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/eggs.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), logID: logID},
+                    success:function(result) {
+                        console.log('Egg Update');
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+            }
+        })
+        
+        let arrActive = [];
+        
+        $('#divLogin').addClass('active');
+        arrActive.push('#divLogin');
+        
+        $('#btnGoToRegistration').on('click',function() {
             // Use this click handler to toggle the view of the user registration and login <div> elements
             handleArrActive(arrActive, '#divRegistration');
 
-        })
-
-        $('#btnGoToLogin').on('click',function(){
+        });
+        
+        $('#btnGoToLogin').on('click',function() {
             // Use this click handler to toggle the view of the user registration and login <div> elements
             handleArrActive(arrActive, '#divLogin');
-
-        })
+        });
         
-        $('#txtIsCoopSameAsPersonal').on('change', function(){
+        $('#txtIsCoopSameAsPersonal').on('change', function() {
             $('#formStreet1').removeClass('d-none');
             $('#formStreet2').removeClass('d-none');
             $('#formCity').removeClass('d-none');
             $('#formState').removeClass('d-none');
             $('#formZip').removeClass('d-none');
-
-        })
+        });
         
-        $('#btnBackToSignIn').on('click',function(){
+        $('#btnBackToSignIn').on('click',function() {
             handleArrActive(arrActive, '#divLogin');
-
-        })
-
-        $('#btnForgotPassword').on('click',function(){
-            handleArrActive(arrActive, '#divForgotPassword');
-
-        })
+        });
         
-        $('#btnRegister').on('click',function(){
+        $('#btnForgotPassword').on('click',function() {
+            handleArrActive(arrActive, '#divForgotPassword');
+        });
+        
+        $('#btnRegister').on('click',function() {
             let strCoopStreet1;
             let strCoopStreet2;
             let strCoopCity;
@@ -436,7 +449,8 @@
             let strCity = $('#txtCreateACity').val();
             let strState = $('#txtCreateAState').val();
             let strZip = $('#txtCreateAZIP').val();
-            if(!$('#txtCoopNotSameAsPersonal').is(':checked')){
+            
+            if(!$('#txtCoopNotSameAsPersonal').is(':checked')) {
                 strCoopStreet1 = $('#txtCreateAStreet1').val();
                 strCoopStreet2 = $('#txtCreateAStreet2').val();
                 strCoopCity = $('#txtCreateACity').val();
@@ -450,11 +464,10 @@
                 strCoopZip = $('#txtCreateBZIP').val();
             }
             let strCode = $('#txtCreateCode').val();
-                
-            let blnError = false; 
-            let strErrorMessage = ''; 
+            let blnError = false;
+            let strErrorMessage = '';
             
-            if(!strEmail){ 
+            if(!strEmail) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter an email.</p>'
             } else if(strEmail && !isValidEmail(strEmail)){
@@ -462,356 +475,354 @@
                 strErrorMessage += '<p> you must enter a valid email address</p>'
             }
             
-            
-            if(!strPassword){ 
+            if(!strPassword) { 
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a password.</p>'
-            }else if(strPassword && !isValidPassword(strPassword)){
+            } else if(strPassword && !isValidPassword(strPassword)){
                 blnError = true;
                 strErrorMessage += '<p> you must enter a valid password containing: a capital letter (A), a lowercase letter(a) a number(0-9) and a special character(*)</p>'
             }
             
-            if(!strFirstName){ 
+            if(!strFirstName) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a first name.</p>'
             }
             
-            if(!strLastName){ 
+            if(!strLastName) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a last name.</p>'
             }
             
-            if(!strStreet1){ 
+            if(!strStreet1) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a street.</p>'
             }
             
-            if(!strCity){ 
+            if(!strCity) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a city.</p>'
             }
             
-            if(!strState){ 
+            if(!strState) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a state.</p>'
             }
             
-            if(!strZip){ 
+            if(!strZip) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a zipcode.</p>'
             }
             
-            if(!strCoopStreet1){ 
+            if(!strCoopStreet1) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop street.</p>'
             }
             
-            if(!strCoopCity){ 
+            if(!strCoopCity) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop city.</p>'
             }
             
-            if(!strCoopState){ 
+            if(!strCoopState) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop state.</p>'
             }
             
-            if(!strCoopZip){ 
+            if(!strCoopZip) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter a coop zipcode.</p>'
             }
             
-            if(!strCode){
+            if(!strCode) {
                 blnError = true;
                 strErrorMessage += '<p> you must enter a coop identification code.</p>'
             }
             
-            if(blnError == true){
+            if(blnError == true) {
                 Swal.fire({
                     type: 'error',
                     title: "Oh No",
                     html: strErrorMessage
                 })
-            } else{
-                $.post('https://simplecoop.swollenhippo.com/coop.php', {}).done(function(result){
+            } else {
+                $.post('https://simplecoop.swollenhippo.com/coop.php', {}).done(function(result) {
                     const coop = JSON.parse(result);
-
+                    
                     console.log(coop.CoopID);
-                    if(!coop.CoopID){
-                    Swal.fire({
-                    icon: 'error',
-                    title: 'Uh Oh...'
-                    })
-                    } else {
-                        $.post('https://simplecoop.swollenhippo.com/users.php', {Email:strEmail, Password:strPassword, FirstName:strFirstName, LastName:strLastName, CoopID:coop.CoopID}).done(function(result){
-
-                        const obj = JSON.parse(result);
-
-                        console.log(obj.Outcome);
-
-                        if(!obj.Outcome){
-                            Swal.fire({
+                    if(!coop.CoopID) {
+                        Swal.fire({
                             icon: 'error',
-                            title: 'Uh Oh...',
-                            text: obj.Error
-                            })
-                            console.log(obj.Error);
-                        } else {
-                            Swal.fire({
-                            icon: 'success',
-                            title: obj.Outcome,
-                            })
-                            
-
-                            $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result){
-
-                            console.log(result);
-                            const obj = JSON.parse(result);
-
-                            console.log(obj);
-
-                            if(obj.SessionID){
-                                $('#txtEmail').val('');
-                                $('#txtPassword').val('');
-                                sessionStorage.setItem("SessionID", obj.SessionID)
-                                let strSessionID = sessionStorage.getItem('SessionID');
-
-                                $.ajax({
-                                    type: "PUT",
-                                    contentType:"application/json; charset=utf-8",
-                                    url: "https://simplecoop.swollenhippo.com/coop.php",
-                                    data: {SessionID: strSessionID, Street1: strCoopStreet1, Street2: strCoopStreet2, City: strCoopCity, State: strCoopState, ZIP: strCoopZip},
-                                    success:function(result){
-                                        handleArrActive(arrActive, '#divDashboard');
-
-
-                                        //uncomment after API implemented
-                                        $('#btnSideBar').removeClass('d-none');
-                                        $('#sideBar').removeClass('d-none');
-                                    },
-                                    error: function(resultError){
-                                        // Handle any errors here
-                                    }
-                                })
-
-                                
-                                }
-                                console.log(obj.Outcome);
-                                console.log(obj.Error);
-
-
-                                })
-                            }
+                            title: 'Uh Oh...'
                         })
-
-
+                    } else {
+                        $.post('https://simplecoop.swollenhippo.com/users.php', {Email:strEmail, Password:strPassword, FirstName:strFirstName, LastName:strLastName, CoopID:coop.CoopID}).done(function(result) {
+                            const obj = JSON.parse(result);
+                            console.log(obj.Outcome);
+                            
+                            if(!obj.Outcome){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Uh Oh...',
+                                    text: obj.Error
+                                })
+                                console.log(obj.Error);
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: obj.Outcome,
+                                })
+                                
+                                $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result) {
+                                    console.log(result);
+                                    const obj = JSON.parse(result);
+                                    
+                                    console.log(obj);
+                                    
+                                    if(obj.SessionID){
+                                        $('#txtCreateEmail').val('');
+                                        $('#txtCreatePassword').val('');
+                                        $('#txtCreateFirstName').val('');
+                                        $('#txtCreateLastName').val('');
+                                        $('#txtCreateAStreet1').val('');
+                                        $('#txtCreateAStreet2').val('');
+                                        $('#txtCreateACity').val('');
+                                        $('#txtCreateAState').val('');
+                                        $('#txtCreateAZIP').val('');
+                                        $('#txtCreateBStreet1').val('');
+                                        $('#txtCreateBStreet2').val('');
+                                        $('#txtCreateBCity').val('');
+                                        $('#txtCreateBState').val('');
+                                        $('#txtCreateBZIP').val('');
+                                        sessionStorage.setItem("SessionID", obj.SessionID)
+                                        let strSessionID = sessionStorage.getItem('SessionID');
+                                        
+                                        $.ajax({
+                                            type: "PUT",
+                                            contentType:"application/json; charset=utf-8",
+                                            url: "https://simplecoop.swollenhippo.com/coop.php",
+                                            data: {SessionID: strSessionID, Street1: strCoopStreet1, Street2: strCoopStreet2, City: strCoopCity, State: strCoopState, ZIP: strCoopZip},
+                                            success:function(result) {
+                                                handleArrActive(arrActive, '#divDashboard');
+                                                //uncomment after API implemented
+                                                $('#btnSideBar').removeClass('d-none');
+                                                $('#sideBar').removeClass('d-none');
+                                            },
+                                            error: function(resultError) {
+                                                // Handle any errors here
+                                            }
+                                        });
+                                    }
+                                    console.log(obj.Outcome);
+                                    console.log(obj.Error);
+                                });
+                            }
+                        });
                     }
                 })
-            }   
-
-
-                
-            
-        
-        })
-        
+            }
+        });
         
         function isValidEmail(strEmail){
             let regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
             return regEmail.test(strEmail);
         }
+        
         function isValidPassword(strPassword){
             let regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/;
             return regPassword.test(strPassword);
         }
         
-        $('#btnLogin').on('click', function(){
+        $('#btnLogin').on('click', function() {
             let strEmail = $('#txtLoginEmail').val();
             let strPassword = $('#txtLoginPassword').val();
             
             let blnError = false;
             let strErrorMessage = '';
-            if(!strEmail){
+            if(!strEmail) {
                 blnError = true;
                 strErrorMessage += '<p>Email cannot be blank</p>';
             }
-            if(!strPassword){
+            if(!strPassword) {
                 blnError = true;
                 strErrorMessage += '<p>Password cannot be blank</p>';
             }
             
-            if(blnError == true){
+            if(blnError == true) {
                 Swal.fire({
                     type: 'error',
                     title: "Oh No",
                     html: strErrorMessage
                 })
-            } else{
-                console.log('Success');
-
-                $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result){
-
+            } else {
+                $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result) {
                     console.log(result);
                     const obj = JSON.parse(result);
-
+                    
                     console.log(obj);
-
-                    if(obj.SessionID){
-                        $('#txtEmail').val('');
-                        $('#txtPassword').val('');
+                    
+                    if(obj.SessionID) {
+                        $('#txtLoginEmail').val('');
+                        $('#txtLoginPassword').val('');
                         sessionStorage.setItem("SessionID", obj.SessionID)
                         let strSessionID = sessionStorage.getItem('SessionID');
-
+                        
                         handleArrActive(arrActive, '#divDashboard');
-            
+                        
                         //uncomment after API implemented
                         $('#btnSideBar').removeClass('d-none');
                         $('#sideBar').removeClass('d-none');
-                    } else{
+                        
+                    } else {
                         Swal.fire({
                             type: 'error',
                             title: "Oh No",
                             text: "Incorrect Username/Password"
                         })
                     }
-                        console.log(obj.Outcome);
-                        console.log(obj.Error);
-
-
-                })
- 
+                    console.log(obj.Outcome);
+                    console.log(obj.Error);
+                });
             }
-            
-  
-        })
+        });
         
-        $('#btnRequestPasswordReset').on('click', function(){
+        $('#btnRequestPasswordReset').on('click', function() {
             
         })
         
-        $('#linkDashboard').on('click', function(){
+        $('#linkDashboard').on('click', function() {
             handleArrActive(arrActive, '#divDashboard');
             $('#btnCloseNav').click();
         })
         
-        $('#linkSettings').on('click', function(){
+        function eggIncrement(){
+            const numberElement = document.getElementById("txtEggsHarvested");
+            const number = parseInt(numberElement.innerText, 10) + 1;
+            numberElement.innerText = number;
+        }
+        
+        $('#linkSettings').on('click', function() {
             handleArrActive(arrActive, '#divSettings');
             $('#btnCloseNav').click();
         })
         
-        $('#linkWarnings').on('click', function(){
+        $('#linkWarnings').on('click', function() {
             Swal.fire({
-                    type: 'error',
-                    title: "Oh No",
-                    text: 'WARNINGS'
-                })
+                type: 'error',
+                title: "Oh No",
+                text: 'WARNINGS'
+            })
         })
         
-        $('#linkLogout').on('click', function(){
-            handleArrActive(arrActive, '#divLogin');
+        $('#linkLogout').on('click', function() {
+            $.ajax({
+                type: "DELETE",
+                contentType:"application/json; charset=utf-8",
+                url: "https://simplecoop.swollenhippo.com/sessions.php",
+                data: { SessionID: 'SessionID'/* Make sure to set the key equal to the value of session Storage item POSSession Here */ },
+                success:function(result) {
+                    // Delete any session Storage items
+                    // Hide the dashboard and show the Login
+                    sessionStorage.removeItem('SessionID');
+                    handleArrActive(arrActive, '#divLogin');
+                    
+                    //uncomment after API is implemented
+                    $('#btnSideBar').addClass('d-none');
+                    $('#btnCloseNav').click();
+                },
+                error: function(resultError) {
+                    Swal.fire({
+                        type: 'error',
+                        html: '<h3>Error Logging out</h3>'
+                    })
+                }
+            })
+        });
 
-            //uncomment after API is implemented
-            $('#btnSideBar').addClass('d-none');
-            $('#btnCloseNav').click();
-
-        })
-
-
-        function handleArrActive(arrActive, curElement){
+        function handleArrActive(arrActive, curElement) {
             console.log(arrActive);
             for (let element of arrActive) {
                 $(element).slideToggle('d-none');
                 $(element).removeClass('active');
                 arrActive.pop();
             };
-
+            
             handleCurElement(curElement);
-        }
-
-        function handleCurElement(curElement){
-            if (!$(curElement).hasClass('active')){
+        };
+        
+        function handleCurElement(curElement) {
+            if (!$(curElement).hasClass('active')) {
                 $(curElement).slideToggle('d-none');
-
+                
                 $(curElement).addClass('active');
                 arrActive.push(curElement);
             }
-        }
-
-
-
+        };
+        
         //settings button clicks
-
-        $('#btnTimeDoorOpens').on('click', function(){
+        
+        $('#btnTimeDoorOpens').on('click', function() {
             strDoorOpens = $('#inputTimeDoorOpens').val();
-
+            
             if (strDoorOpens != null && strDoorOpens != '') {
                 $('#timeDoorOpens').text(strDoorOpens);
             }
-            
-        })
+        });
         
-        $('#btnTimeDoorCloses').on('click', function(){
+        $('#btnTimeDoorCloses').on('click', function() {
             strDoorCloses = $('#inputTimeDoorCloses').val();
-
+            
             if (strDoorCloses != null && strDoorCloses != '') {
                 $('#timeDoorCloses').text(strDoorCloses);
             }
-            
-        })
+        });
         
-        $('#btnTimeLightsOn').on('click', function(){
+        $('#btnTimeLightsOn').on('click', function() {
             strLightsOn = $('#inputTimeLightsOn').val();
-
+            
             if (strLightsOn != null && strLightsOn != '') {
                 $('#timeLightsOn').text(strLightsOn);
             }
-            
-        })
+        });
         
-        $('#btnTimeLightsOff').on('click', function(){
+        $('#btnTimeLightsOff').on('click', function() {
             strLightsOff = $('#inputTimeLightsOff').val();
-
+            
             if (strLightsOff != null && strLightsOff != '') {
                 $('#timeLightsOff').text(strLightsOff);
             }
-            
-        })
+        });
         
-        $('#btnTempHeaterOn').on('click', function(){
+        $('#btnTempHeaterOn').on('click', function() {
             strHeaterOn = $('#inputTempHeaterOn').val();
-
+            
             if (strHeaterOn != null && strHeaterOn != '') {
                 $('#tempHeaterOn').text(strHeaterOn);
             }
-            
-        })
+        });
         
-        $('#btnTempFanOn').on('click', function(){
+        $('#btnTempFanOn').on('click', function() {
             strFanOn = $('#inputTempFanOn').val();
-
+            
             if (strFanOn != null && strFanOn != '') {
                 $('#tempFanOn').text(strFanOn);
             }
-            
-        })
+        });
         
-        $('#btnPercentLowWater').on('click', function(){
+        $('#btnPercentLowWater').on('click', function() {
             strLowWater = $('#inputPercentLowWater').val();
-
+            
             if (strLowWater != null && strLowWater != '') {
                 $('#percentLowWater').text(strLowWater);
             }
-            
-        })
+        });
         
-        $('#btnPercentLowFood').on('click', function(){
+        $('#btnPercentLowFood').on('click', function() {
             strLowFood = $('#inputPercentLowFood').val();
-
+            
             if (strLowFood != null && strLowFood != '') {
                 $('#percentLowFood').text(strLowFood);
             }
-            
-        })
+        });
     </script>
     
     <script>
