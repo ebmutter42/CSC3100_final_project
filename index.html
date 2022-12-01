@@ -1208,6 +1208,25 @@
             }
         });
 
+        $('#btnPercentLowFood').on('click', function() {
+            strLowFood = $('#inputPercentLowFood').val();
+            
+        
+            if (strLowFood != null && strLowFood != '') {
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowFood', value:strLowFood},
+                    success:function(result) {
+                        $('#percentLowFood').text(strLowFood);                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+            }
+        });
+
         $('#toggleDoorState').on('change', function() {
             let strDoorState;
             if ($('#toggleDoorState').val() == 'Open'){
@@ -1278,24 +1297,6 @@
         });
         
 
-
-        $('#btnPercentLowFood').on('change', function() {
-            strLowFood = $('#inputPercentLowFood').val();
-            
-            if (strLowFood != null && strLowFood != '') {
-                $.ajax({
-                    type: "PUT",
-                    contentType:"application/json; charset=utf-8",
-                    url: "https://simplecoop.swollenhippo.com/settings.php",
-                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowFood', value:strLowFood},
-                    success:function(result) {
-                        $('#percentLowFood').text(strLowWater);                    },
-                    error: function(resultError) {
-                        // Handle any errors here
-                    }
-                });
-            }
-        });
     </script>
     
     <script>
