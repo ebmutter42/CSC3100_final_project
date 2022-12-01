@@ -158,10 +158,6 @@
                         <input class="form-control" type="text" id="txtCreateBZIP" aria-label="Enter Coop Zipcode">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="txtCreateCode" class="form-label mt-4">Enter a code consisting of letters and numbers which will be associated with your Coop:</label>
-                        <input class="form-control" type="text" id="txtCreateCode" aria-label="Enter Coop Code">
-                    </div>
                 </form>
                 <button id="btnRegister" class="btn btn-info col-12 mt-3 mb-5" type="button">Create Account</button>
             </div>
@@ -216,8 +212,13 @@
                         <h2>Eggs Harvested This Year</h2>
                     </div>
                     <div class="card-body">
-                        <button id="txtEggsHarvested">204092</button>
-                        <button onclick="eggIncrement()">Add Egg</button>
+
+                        <h2 id="txtEggsHarvested">0</h2>
+
+                        <input type="number" id="EggNum" class="col-3 m-2" aria-label="Enter the amount of eggs collected">
+
+                        <button onclick="eggIncrement()" class="btn btn-light">Add Egg</button>
+
                     </div>
                 </div>
                 <div class="card m-2 bg-info">
@@ -273,7 +274,7 @@
                         </div>
 
                         <div class="d-flex">
-                            <h2 class="col-6">Coop Door Closses at <a id="timeDoorCloses">10:00pm</a></h2>
+                            <h2 class="col-6">Coop Door Closes at <a id="timeDoorCloses">10:00pm</a></h2>
                             <input type="time" id="inputTimeDoorCloses" class="col-3 m-2" aria-label="Enter New Door Closing Time">
                             <button id="btnTimeDoorCloses" type="button" class="col-2 btn btn-light m-2">Submit</button>
                         </div>
@@ -328,14 +329,14 @@
                         <div class="d-flex">
                             <h2 class="col-6">Door State</h2>
                             <div class="form-check form-switch col-6">
-                                <input type="checkbox" checked data-toggle="toggle" data-width="100" data-on="Open" data-off="Closed" aria-label="Toggle to Open and Close Door">
+                                <input id='toggleDoorState'  type="checkbox" data-toggle="toggle" data-width="100" data-on="Open" data-off="Closed" aria-label="Toggle to Open and Close Door">
                             </div>
                         </div>
 
                         <div class="d-flex">
                             <h2 class="col-6">Fan State</h2>
                             <div class="form-check form-switch col-6">
-                                <input type="checkbox" checked data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Fan On or Off">
+                                <input id='toggleFanState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Fan On or Off">
 
                             </div>
                         </div>
@@ -343,7 +344,7 @@
                         <div class="d-flex">
                             <h2 class="col-6">Light State</h2>
                             <div class="form-check form-switch col-6 d-flex">
-                                <input type="checkbox" checked data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Light On or Off">
+                                <input id='toggleLightState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Light On or Off">
                             </div>
                         </div>
 
@@ -367,45 +368,36 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <script>
+        let arrActive = [];
+        $('#divLogin').addClass('active');
+        arrActive.push('#divLogin');
+
+
+        //check if already logged in
+        if(sessionStorage.getItem('SessionID')){
+            let strSessionID = sessionStorage.getItem('SessionID');
+            $.getJSON('https://simplecoop.swollenhippo.com/sessions.php', {SessionID:strSessionID}, function(session){
+                if(session){
+                    handleArrActive(arrActive, '#divDashboard');
+                        
+                    //uncomment after API implemented
+                    $('#btnSideBar').removeClass('d-none');
+                    $('#sideBar').removeClass('d-none');
+                } else {
+                    sessionStorage.removeItem('SessionID');
+                }
+            })
+        }
+
+        
+        //fill days to cleanout dashboard
         let today = new Date();
         var cleanout = new Date('01/15/2023');
         var Difference_In_Time = cleanout.getTime() - today.getTime();
         var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
         $('#txtDaysToClean').text(Difference_In_Days);
         
-        let eggsToAdd = 0;
         
-        $.getJSON('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), days:today}).done(function(result) {
-            const eggs = JSON.parse(result);
-            console.log('eggs');
-            if(!eggs){
-                $.post('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), observationDateTime:today, eggs: eggsToAdd}).done(function(result) {
-                    const newEgg = JSON.parse(result);
-                    if (newEgg.logID){
-                        const logID = newEgg.logID;
-                        console.log('egg create');
-                    }
-                })
-            } else {
-                $.ajax({
-                    type: "PUT",
-                    contentType:"application/json; charset=utf-8",
-                    url: "https://simplecoop.swollenhippo.com/eggs.php",
-                    data: {SessionID: sessionStorage.getItem('SessionID'), logID: logID},
-                    success:function(result) {
-                        console.log('Egg Update');
-                    },
-                    error: function(resultError) {
-                        // Handle any errors here
-                    }
-                });
-            }
-        })
-        
-        let arrActive = [];
-        
-        $('#divLogin').addClass('active');
-        arrActive.push('#divLogin');
         
         $('#btnGoToRegistration').on('click',function() {
             // Use this click handler to toggle the view of the user registration and login <div> elements
@@ -413,11 +405,15 @@
 
         });
         
+
+
         $('#btnGoToLogin').on('click',function() {
             // Use this click handler to toggle the view of the user registration and login <div> elements
             handleArrActive(arrActive, '#divLogin');
         });
         
+
+
         $('#txtIsCoopSameAsPersonal').on('change', function() {
             $('#formStreet1').removeClass('d-none');
             $('#formStreet2').removeClass('d-none');
@@ -426,15 +422,22 @@
             $('#formZip').removeClass('d-none');
         });
         
+
+
         $('#btnBackToSignIn').on('click',function() {
             handleArrActive(arrActive, '#divLogin');
         });
         
+
+
         $('#btnForgotPassword').on('click',function() {
             handleArrActive(arrActive, '#divForgotPassword');
         });
         
+
+
         $('#btnRegister').on('click',function() {
+            //variables
             let strCoopStreet1;
             let strCoopStreet2;
             let strCoopCity;
@@ -463,10 +466,11 @@
                 strCoopState = $('#txtCreateBState').val();
                 strCoopZip = $('#txtCreateBZIP').val();
             }
-            let strCode = $('#txtCreateCode').val();
             let blnError = false;
             let strErrorMessage = '';
-            
+
+
+            //validation
             if(!strEmail) {
                 blnError = true; 
                 strErrorMessage += '<p> you must enter an email.</p>'
@@ -533,11 +537,9 @@
                 strErrorMessage += '<p> you must enter a coop zipcode.</p>'
             }
             
-            if(!strCode) {
-                blnError = true;
-                strErrorMessage += '<p> you must enter a coop identification code.</p>'
-            }
-            
+
+
+            //creation process
             if(blnError == true) {
                 Swal.fire({
                     type: 'error',
@@ -545,6 +547,8 @@
                     html: strErrorMessage
                 })
             } else {
+
+                //create coop
                 $.post('https://simplecoop.swollenhippo.com/coop.php', {}).done(function(result) {
                     const coop = JSON.parse(result);
                     
@@ -555,6 +559,8 @@
                             title: 'Uh Oh...'
                         })
                     } else {
+
+                        //create user
                         $.post('https://simplecoop.swollenhippo.com/users.php', {Email:strEmail, Password:strPassword, FirstName:strFirstName, LastName:strLastName, CoopID:coop.CoopID}).done(function(result) {
                             const obj = JSON.parse(result);
                             console.log(obj.Outcome);
@@ -572,6 +578,8 @@
                                     title: obj.Outcome,
                                 })
                                 
+
+                                //create session
                                 $.post('https://simplecoop.swollenhippo.com/sessions.php', {Email:strEmail, Password:strPassword}).done(function(result) {
                                     console.log(result);
                                     const obj = JSON.parse(result);
@@ -596,6 +604,8 @@
                                         sessionStorage.setItem("SessionID", obj.SessionID)
                                         let strSessionID = sessionStorage.getItem('SessionID');
                                         
+
+                                        //update coop address
                                         $.ajax({
                                             type: "PUT",
                                             contentType:"application/json; charset=utf-8",
@@ -611,6 +621,94 @@
                                                 // Handle any errors here
                                             }
                                         });
+  
+
+                                        //create settings
+
+                                        let setting = '';
+                                        let value = '';
+
+                                        //SETTINGS
+                                        //Door Opens
+                                        setting = 'DoorOpens';
+                                        value = '12:00 am';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                            console.log(value);
+                                        })
+
+                                        //Door Closes
+                                        setting = 'DoorCloses';
+                                        value = '10:00 pm';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Lights On
+                                        setting = 'LightsOn';
+                                        value = '9:00 am';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Lights Off
+                                        setting = 'LightsOff';
+                                        value = '10:00 pm';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Heater On
+                                        setting = 'HeaterOn';
+                                        value = '35';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Fan On
+                                        setting = 'FanOn';
+                                        value = '80';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Low Water
+                                        setting = 'LowWater';
+                                        value = '30';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Low Food
+                                        setting = 'LowFood';
+                                        value = '20';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Door State
+                                        setting = 'DoorState';
+                                        value = 'Open';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Fan State
+                                        setting = 'FanState';
+                                        value = 'On';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+
+                                        //Light State
+                                        setting = 'LightState';
+                                        value = 'Off';
+                                        $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
+                                            const newSetting = JSON.parse(result);
+                                        })
+                                            
+
+                                        //create weather thing
                                     }
                                     console.log(obj.Outcome);
                                     console.log(obj.Error);
@@ -621,17 +719,119 @@
                 })
             }
         });
-        
+
+        // $.post('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), observationDateTime:today, eggs: 4}).done(function(result) {
+        //     const newEgg = JSON.parse(result);
+        //     console.log(result);
+        //     if (newEgg.LogID){
+        //         const logID = newEgg.LogID;
+        //         console.log(logID);
+
+        //     }
+        // })
+
+                                        
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorOpens'}).done(function(result){
+            let firstTwo = result.Value.slice(0,2);
+            if (firstTwo > 13){
+                $('#timeDoorOpens').text(((firstTwo - 12) + result.Value.slice(2)) + 'pm');
+            } else{
+                $('#timeDoorOpens').text(result.Value + 'am');
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorCloses'}).done(function(result){
+            let firstTwo = result.Value.slice(0,2);
+            if (firstTwo > 13){
+                $('#timeDoorCloses').text(((firstTwo - 12) + result.Value.slice(2)) + 'pm');
+            } else{
+                $('#timeDoorCloses').text(result.Value + 'am');
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightsOn'}).done(function(result){
+            let firstTwo = result.Value.slice(0,2);
+            if (firstTwo > 13){
+                $('#timeLightsOn').text(((firstTwo - 12) + result.Value.slice(2)) + 'pm');
+            } else{
+                $('#timeLightsOn').text(result.Value + 'am');
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightsOff'}).done(function(result){
+            let firstTwo = result.Value.slice(0,2);
+            if (firstTwo > 13){
+                $('#timeLightsOff').text(((firstTwo - 12) + result.Value.slice(2)) + 'pm');
+            } else{
+                $('#timeLightsOff').text(result.Value + 'am');
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'HeaterOn'}).done(function(result){
+            $('#tempHeaterOn').text(result.Value);
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'FanOn'}).done(function(result){
+            $('#tempFanOn').text(result.Value);
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowWater'}).done(function(result){
+            $('#percentLowWater').text(result.Value);
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowFood'}).done(function(result){
+            $('#percentLowFood').text(result.Value);
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorState'}).done(function(result){
+            console.log(result);
+            $('#toggleDoorState').val(result.Value);
+            if (result.Value == "Open"){
+                $('#toggleDoorState').attr("checked",true);   
+            } else {
+                $('#toggleDoorState').attr("checked",false);   
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'FanState'}).done(function(result){
+            console.log(result);
+            $('#toggleFanState').val(result.Value);
+            if (result.Value == "On"){
+                $("#toggleFanState").attr('checked', true);         
+            } else{
+                $("#toggleFanState").attr('checked', false);         
+
+            }
+        })
+
+        $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightState'}).done(function(result){
+            console.log(result);
+            $('#toggleLightState').val(result.Value);
+            if (result.Value == "Off"){
+                $("#toggleLightState").attr('checked', false);         
+            } else{
+                $("#toggleLightState").attr('checked', true);         
+
+            }
+        })
+    
+
+
         function isValidEmail(strEmail){
             let regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
             return regEmail.test(strEmail);
         }
         
+
+
         function isValidPassword(strPassword){
             let regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/;
             return regPassword.test(strPassword);
         }
         
+
+
         $('#btnLogin').on('click', function() {
             let strEmail = $('#txtLoginEmail').val();
             let strPassword = $('#txtLoginPassword').val();
@@ -665,6 +865,7 @@
                         $('#txtLoginPassword').val('');
                         sessionStorage.setItem("SessionID", obj.SessionID)
                         let strSessionID = sessionStorage.getItem('SessionID');
+
                         
                         handleArrActive(arrActive, '#divDashboard');
                         
@@ -684,27 +885,65 @@
                 });
             }
         });
+
+
         
         $('#btnRequestPasswordReset').on('click', function() {
             
         })
+
+
         
         $('#linkDashboard').on('click', function() {
             handleArrActive(arrActive, '#divDashboard');
             $('#btnCloseNav').click();
         })
+
+
         
         function eggIncrement(){
-            const numberElement = document.getElementById("txtEggsHarvested");
-            const number = parseInt(numberElement.innerText, 10) + 1;
-            numberElement.innerText = number;
+            
+            let eggs = $('#EggNum').val();
+            if(eggs != null && eggs != ''){
+                const numberElement = document.getElementById("txtEggsHarvested");
+
+                const number = parseInt(numberElement.innerText, 10);
+
+                const newNum = parseInt($('#EggNum').val());
+
+                let final = number + newNum;
+
+                numberElement.innerText = final;
+
+                $.post('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), observationDateTime:(new Date().toJSON().slice(0,19)), eggs: eggs}).done(function(result) {
+                    const newEgg = JSON.parse(result);
+                    if (newEgg.LogID){
+                        const logID = newEgg.LogID;
+
+                    }
+                })
+
+            }
+
         }
+
+        $.getJSON('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), days:365}).done(function(result){
+            let totalEggs = 0;
+            $.each(result,function(index, objCurrent){
+                totalEggs += objCurrent.Harvested;
+            });
+            $('#txtEggsHarvested').text(totalEggs);
+        })
+
+
         
         $('#linkSettings').on('click', function() {
             handleArrActive(arrActive, '#divSettings');
             $('#btnCloseNav').click();
         })
         
+
+
         $('#linkWarnings').on('click', function() {
             Swal.fire({
                 type: 'error',
@@ -713,6 +952,8 @@
             })
         })
         
+
+
         $('#linkLogout').on('click', function() {
             $.ajax({
                 type: "DELETE",
@@ -738,6 +979,8 @@
             })
         });
 
+
+
         function handleArrActive(arrActive, curElement) {
             console.log(arrActive);
             for (let element of arrActive) {
@@ -749,6 +992,8 @@
             handleCurElement(curElement);
         };
         
+
+
         function handleCurElement(curElement) {
             if (!$(curElement).hasClass('active')) {
                 $(curElement).slideToggle('d-none');
@@ -758,69 +1003,264 @@
             }
         };
         
+
+
         //settings button clicks
         
         $('#btnTimeDoorOpens').on('click', function() {
             strDoorOpens = $('#inputTimeDoorOpens').val();
+            let firstTwo = strDoorOpens.slice(0,2);;
             
             if (strDoorOpens != null && strDoorOpens != '') {
-                $('#timeDoorOpens').text(strDoorOpens);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorOpens', value:strDoorOpens},
+                    success:function(result) {
+                        if (firstTwo > 13){
+                            $('#timeDoorOpens').text(((firstTwo - 12) + strDoorOpens.slice(2)) + 'pm');
+                        } else{
+                            $('#timeDoorOpens').text(strDoorOpens + 'am');
+                        }
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
+
+
         
         $('#btnTimeDoorCloses').on('click', function() {
             strDoorCloses = $('#inputTimeDoorCloses').val();
             
             if (strDoorCloses != null && strDoorCloses != '') {
-                $('#timeDoorCloses').text(strDoorCloses);
+                let firstTwo = strDoorCloses.slice(0,2);;
+            
+            if (strDoorCloses != null && strDoorCloses != '') {
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorCloses', value:strDoorCloses},
+                    success:function(result) {
+                        if (firstTwo > 13){
+                            $('#timeDoorCloses').text(((firstTwo - 12) + strDoorCloses.slice(2)) + 'pm');
+                        } else{
+                            $('#timeDoorCloses').text(strDoorCloses + 'am');
+                        }
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+            }
             }
         });
+
+
         
         $('#btnTimeLightsOn').on('click', function() {
             strLightsOn = $('#inputTimeLightsOn').val();
+            let firstTwo = strLightsOn.slice(0,2);;
             
             if (strLightsOn != null && strLightsOn != '') {
-                $('#timeLightsOn').text(strLightsOn);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightsOn', value:strLightsOn},
+                    success:function(result) {
+                        if (firstTwo > 13){
+                            $('#timeLightsOn').text(((firstTwo - 12) + strLightsOn.slice(2)) + 'pm');
+                        } else{
+                            $('#timeLightsOn').text(strLightsOn + 'am');
+                        }
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
+        
         });
         
+
+
         $('#btnTimeLightsOff').on('click', function() {
             strLightsOff = $('#inputTimeLightsOff').val();
             
+            let firstTwo = strLightsOff.slice(0,2);;
+            
             if (strLightsOff != null && strLightsOff != '') {
-                $('#timeLightsOff').text(strLightsOff);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightsOff', value:strLightsOff},
+                    success:function(result) {
+                        if (firstTwo > 13){
+                            $('#timeLightsOff').text(((firstTwo - 12) + strLightsOff.slice(2)) + 'pm');
+                        } else{
+                            $('#timeLightsOff').text(strLightsOff + 'am');
+                        }
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
         
+
+
         $('#btnTempHeaterOn').on('click', function() {
             strHeaterOn = $('#inputTempHeaterOn').val();
             
             if (strHeaterOn != null && strHeaterOn != '') {
-                $('#tempHeaterOn').text(strHeaterOn);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'HeaterOn', value:strHeaterOn},
+                    success:function(result) {
+                        $('#tempHeaterOn').text(strHeaterOn);
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
         
+
+
         $('#btnTempFanOn').on('click', function() {
             strFanOn = $('#inputTempFanOn').val();
             
             if (strFanOn != null && strFanOn != '') {
-                $('#tempFanOn').text(strFanOn);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'FanOn', value:strFanOn},
+                    success:function(result) {
+                        $('#tempFanOn').text(strFanOn);                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
         
+
+
         $('#btnPercentLowWater').on('click', function() {
             strLowWater = $('#inputPercentLowWater').val();
             
             if (strLowWater != null && strLowWater != '') {
-                $('#percentLowWater').text(strLowWater);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowWater', value:strLowWater},
+                    success:function(result) {
+                        $('#percentLowWater').text(strLowWater);                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
+
+        $('#toggleDoorState').on('change', function() {
+            let strDoorState;
+            if ($('#toggleDoorState').is(':checked')){
+                strDoorState = 'Open';
+            }
+            if (!$('#toggleDoorState').is(':checked')){
+                strDoorState = 'Closed';
+            }
+            $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'DoorState', value:strDoorState},
+                    success:function(result) {
+                        
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+        });
+
+        $('#toggleFanState').on('change', function() {
+            let strFanState;
+            if ($('#toggleFanState').is(':checked')){
+                strFanState = 'On';
+                console.log(strFanState);
+            }
+            if (!$('#toggleFanState').is(':checked')){
+                strFanState = 'Off';
+                console.log(strFanState);
+
+            }
+            $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'FanState', value:strFanState},
+                    success:function(result) {
+                        
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+        });
+
+        $('#toggleLightState').on('change', function() {
+            let strLightState;
+            if ($('#toggleLightState').is(':checked')){
+                strLightState = 'On';
+            }
+            if (!$('#toggleLightState').is(':checked')){
+                strLightState = 'Off';
+            }
+            $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LightState', value:strLightState},
+                    success:function(result) {
+                        
+                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
+        });
         
+
+
         $('#btnPercentLowFood').on('click', function() {
             strLowFood = $('#inputPercentLowFood').val();
             
             if (strLowFood != null && strLowFood != '') {
-                $('#percentLowFood').text(strLowFood);
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json; charset=utf-8",
+                    url: "https://simplecoop.swollenhippo.com/settings.php",
+                    data: {SessionID: sessionStorage.getItem('SessionID'), setting: 'LowFood', value:strLowFood},
+                    success:function(result) {
+                        $('#percentLowFood').text(strLowWater);                    },
+                    error: function(resultError) {
+                        // Handle any errors here
+                    }
+                });
             }
         });
     </script>
