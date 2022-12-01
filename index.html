@@ -24,9 +24,9 @@
             <div class="container-fluid">
                 
                 <div class="d-flex col-12 align-items-center">
-                    <div class="d-flex col-7 offset-4 text-center">
-                        <img src="chicken.png" alt="Chicken Logo" width="80" height="80" class="m-3">
-                        <div class="m-4">
+                    <div class="d-flex col-6 col-sm-6 offset-4 offset-sm-5 text-center">
+                        <img src="chicken.png" alt="Chicken Logo" width="80" height="80" class="m-0 m-sm-1">
+                        <div class="m-2 d-none d-sm-block">
                             <h2>Chicken Coop</h2>
                             <h5>Where Farmers Connect</h5>
                         </div>
@@ -226,15 +226,15 @@
                         <h2>Current Temperature</h2>
                     </div>
                     <div class="card-body">
-                        <h2 id="txtTemp">20.04 &#176;C</h2>
+                        <h2><a id="txtTemp">24</a> &#176;C</h2>
                     </div>
                 </div>
                 <div class="card m-2 bg-danger">
                     <div class="card-header">
-                        <h2 id="txtHumidity">Current Humidity</h2>
+                        <h2>Current Humidity</h2>
                     </div>
                     <div class="card-body">
-                        <h2>45.08%</h2>
+                        <h2><a id="txtHumidity">45.08</a>%</h2>
                     </div>
                 </div>
                 <div class="card m-2 bg-warning">
@@ -267,53 +267,71 @@
                         <h2 class="text-light">Automatic Settings</h2> <!-- style="color:rgb(0, 0, 0); -->
                     </div>
                     <div class="card-body">
-                        <div class="d-flex">
-                            <h2 class="col-6">Coop Door Opens at <a id="timeDoorOpens">9:00am</a></h2>
-                            <input type="time" id="inputTimeDoorOpens" class="col-3 m-2" aria-label="Enter New Door Opening Time">
-                            <button id="btnTimeDoorOpens" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        <div class="d-flex mt-2">
+                            <h2 class="col-6">Coop Door Opens at <a id="timeDoorOpens">9:00</a></h2>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="time" id="inputTimeDoorOpens" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Door Opening Time">
+                                <button id="btnTimeDoorOpens" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
+                            
                         </div>
 
-                        <div class="d-flex">
-                            <h2 class="col-6">Coop Door Closes at <a id="timeDoorCloses">10:00pm</a></h2>
-                            <input type="time" id="inputTimeDoorCloses" class="col-3 m-2" aria-label="Enter New Door Closing Time">
-                            <button id="btnTimeDoorCloses" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        <div class="d-flex mt-2">
+                            <h2 class="col-6">Coop Door Closes at <a id="timeDoorCloses">10:00</a></h2>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="time" id="inputTimeDoorCloses" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Door Closing Time">
+                                <button id="btnTimeDoorCloses" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
+   
                         </div>
                         
-                        <div class="d-flex">
-                            <h2 class="col-6">Coop Lights Turn On at <a id="timeLightsOn">9:00am</a></h2>
-                            <input type="time" id="inputTimeLightsOn" class="col-3 m-2" aria-label="Enter New Lights On Time">
-                            <button id="btnTimeLightsOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        <div class="d-flex mt-2">
+                            <h2 class="col-6">Coop Lights Turn On at <a id="timeLightsOn">9:00</a></h2>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="time" id="inputTimeLightsOn" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Lights On Time">
+                                <button id="btnTimeLightsOn" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
 
-                        <div class="d-flex">
-                            <h2 class="col-6">Coop Lights Turn Off at <a id="timeLightsOff">10:00pm</a></h2>
-                            <input type="time" id="inputTimeLightsOff" class="col-3 m-2" aria-label="Enter New Lights Off Time">
-                            <button id="btnTimeLightsOff" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                        <div class="d-flex mt-2">
+                            <h2 class="col-6">Coop Lights Turn Off at <a id="timeLightsOff">10:00</a></h2>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="time" id="inputTimeLightsOff" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Lights Off Time">
+                                <button id="btnTimeLightsOff" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
 
-                        <div class="d-flex">
+                        <div class="d-flex mt-2">
                             <h2 class="col-6">Coop Heater Turns On at <a id="tempHeaterOn">35</a>&#176;</h2>
-                            <input type="number" id="inputTempHeaterOn" class="col-3 m-2" aria-label="Enter New Heater On Temperature" min="-18" max="38">
-                            <button id="btnTempHeaterOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="number" id="inputTempHeaterOn" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Heater On Temperature" min="-18" max="38">
+                                <button id="btnTempHeaterOn" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
 
-                        <div class="d-flex">
+                        <div class="d-flex mt-2">
                             <h2 class="col-6">Coop Fan Turns On at <a id="tempFanOn">80</a>&#176;</h2>
-                            <input type="number" id="inputTempFanOn" class="col-3 m-2" aria-label="Enter New Fan On Temperature" min="-18" max="38">
-                            <button id="btnTempFanOn" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="number" id="inputTempFanOn" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Fan On Temperature" min="-18" max="38">
+                                <button id="btnTempFanOn" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
 
-                        <div class="d-flex">
+                        <div class="d-flex mt-2">
                             <h2 class="col-6">Low Water Alarm Set For <a id="percentLowWater">30</a>%</h2>
-                            <input type="number" id="inputPercentLowWater" class="col-3 m-2" aria-label="Enter New Low Water Percentage" min="0" max="100">
-                            <button id="btnPercentLowWater" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="number" id="inputPercentLowWater" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Low Water Percentage" min="0" max="100">
+                                <button id="btnPercentLowWater" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
 
 
-                        <div class="d-flex">
+                        <div class="d-flex mt-2">
                             <h2 class="col-6">Low Food Alarm Set For <a id="percentLowFood">20</a>%</h2>
-                            <input type="number" id="inputPercentLowFood" class="col-3 m-2" aria-label="Enter New Low Food Percentage" min="0" max="100">
-                            <button id="btnPercentLowFood" type="button" class="col-2 btn btn-light m-2">Submit</button>
+                            <div class="col-12 d-grid d-sm-flex">
+                                <input type="number" id="inputPercentLowFood" class="col-6 col-sm-3 m-2 mt-3" aria-label="Enter New Low Food Percentage" min="0" max="100">
+                                <button id="btnPercentLowFood" type="button" class="col-6 col-sm-2 btn btn-light m-2">Submit</button>
+                            </div>
                         </div>
                         <!-- add button & input options to change settings -->
                     </div>
@@ -329,14 +347,14 @@
                         <div class="d-flex">
                             <h2 class="col-6">Door State</h2>
                             <div class="form-check form-switch col-6">
-                                <input id='toggleDoorState'  type="checkbox" data-toggle="toggle" data-width="100" data-on="Open" data-off="Closed" aria-label="Toggle to Open and Close Door">
+                                <input id='toggleDoorState' onchange="toggleDoor()" type="checkbox" data-toggle="toggle" data-width="100" data-on="Open" data-off="Closed" aria-label="Toggle to Open and Close Door">
                             </div>
                         </div>
 
                         <div class="d-flex">
                             <h2 class="col-6">Fan State</h2>
                             <div class="form-check form-switch col-6">
-                                <input id='toggleFanState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Fan On or Off">
+                                <input id='toggleFanState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Fan On or Off" defaultChecked="true">
 
                             </div>
                         </div>
@@ -344,7 +362,7 @@
                         <div class="d-flex">
                             <h2 class="col-6">Light State</h2>
                             <div class="form-check form-switch col-6 d-flex">
-                                <input id='toggleLightState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Light On or Off">
+                                <input id='toggleLightState' type="checkbox" data-toggle="toggle" data-width="100" aria-label="Toggle to Turn Light On or Off" defaultChecked="true">
                             </div>
                         </div>
 
@@ -396,7 +414,13 @@
         var Difference_In_Time = cleanout.getTime() - today.getTime();
         var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
         $('#txtDaysToClean').text(Difference_In_Days);
-        
+
+
+        $.getJSON('https://simplecoop.swollenhippo.com/environment.php', {SessionID: sessionStorage.getItem('SessionID'), days: 7}).done(function(result){
+            console.log(result);
+            $('#txtHumidity').text(result[result.length - 1]['Humidity']);
+            $('#txtTemp').text(result[result.length - 1]['Temperature']);
+        })
         
         
         $('#btnGoToRegistration').on('click',function() {
@@ -623,6 +647,7 @@
                                         });
   
 
+
                                         //create settings
 
                                         let setting = '';
@@ -631,7 +656,7 @@
                                         //SETTINGS
                                         //Door Opens
                                         setting = 'DoorOpens';
-                                        value = '12:00 am';
+                                        value = '12:00';
                                         $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
                                             const newSetting = JSON.parse(result);
                                             console.log(value);
@@ -639,21 +664,21 @@
 
                                         //Door Closes
                                         setting = 'DoorCloses';
-                                        value = '10:00 pm';
+                                        value = '10:00';
                                         $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
                                             const newSetting = JSON.parse(result);
                                         })
 
                                         //Lights On
                                         setting = 'LightsOn';
-                                        value = '9:00 am';
+                                        value = '9:00';
                                         $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
                                             const newSetting = JSON.parse(result);
                                         })
 
                                         //Lights Off
                                         setting = 'LightsOff';
-                                        value = '10:00 pm';
+                                        value = '10:00';
                                         $.post('https://simplecoop.swollenhippo.com/settings.php', {SessionID: strSessionID, setting:setting, value:value}).done(function(result) {
                                             const newSetting = JSON.parse(result);
                                         })
@@ -709,6 +734,23 @@
                                             
 
                                         //create weather thing
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-24',temperature:'66',humidity:'29'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-25',temperature:'68',humidity:'40'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-26',temperature:'60',humidity:'45'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-27',temperature:'56',humidity:'46'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-28',temperature:'46',humidity:'67'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-29',temperature:'49',humidity:'59'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-11-30',temperature:'50',humidity:'66'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+                                        $.post('https://simplecoop.swollenhippo.com/environment.php',{SessionID:strSessionID,observationDateTime:'2022-12-01',temperature:'49',humidity:'42'}).done(function(bob){let objResults = JSON.parse(bob);
+                                        })
+
                                     }
                                     console.log(obj.Outcome);
                                     console.log(obj.Error);
@@ -719,16 +761,6 @@
                 })
             }
         });
-
-        // $.post('https://simplecoop.swollenhippo.com/eggs.php', {SessionID: sessionStorage.getItem('SessionID'), observationDateTime:today, eggs: 4}).done(function(result) {
-        //     const newEgg = JSON.parse(result);
-        //     console.log(result);
-        //     if (newEgg.LogID){
-        //         const logID = newEgg.LogID;
-        //         console.log(logID);
-
-        //     }
-        // })
 
                                         
 
@@ -788,19 +820,20 @@
             console.log(result);
             $('#toggleDoorState').val(result.Value);
             if (result.Value == "Open"){
-                $('#toggleDoorState').attr("checked",true);   
+                document.querySelector('#toggleDoorState').checked = true; 
             } else {
-                $('#toggleDoorState').attr("checked",false);   
+                document.querySelector('#toggleDoorState').checked = false; 
             }
         })
 
         $.getJSON('https://simplecoop.swollenhippo.com/settings.php', {SessionID: sessionStorage.getItem('SessionID'), setting: 'FanState'}).done(function(result){
             console.log(result);
             $('#toggleFanState').val(result.Value);
+            console.log($('#toggleFanState').val());
             if (result.Value == "On"){
-                $("#toggleFanState").attr('checked', true);         
+                $("#toggleFanState").prop('checked', true);         
             } else{
-                $("#toggleFanState").attr('checked', false);         
+                $("#toggleFanState").prop('checked', false);         
 
             }
         })
@@ -809,9 +842,9 @@
             console.log(result);
             $('#toggleLightState').val(result.Value);
             if (result.Value == "Off"){
-                $("#toggleLightState").attr('checked', false);         
+                $("#toggleLightState").prop('checked', false);         
             } else{
-                $("#toggleLightState").attr('checked', true);         
+                $("#toggleLightState").prop('checked', true);         
 
             }
         })
@@ -947,8 +980,8 @@
         $('#linkWarnings').on('click', function() {
             Swal.fire({
                 type: 'error',
-                title: "Oh No",
-                text: 'WARNINGS'
+                title: "WARNING",
+                html: '<p>Food Is Low: 8%</p><p>Low Temperature: 10 &#176;C</p>'
             })
         })
         
@@ -1177,10 +1210,10 @@
 
         $('#toggleDoorState').on('change', function() {
             let strDoorState;
-            if ($('#toggleDoorState').is(':checked')){
+            if ($('#toggleDoorState').val() == 'Open'){
                 strDoorState = 'Open';
             }
-            if (!$('#toggleDoorState').is(':checked')){
+            if ($('#toggleDoorState').val() == 'Closed'){
                 strDoorState = 'Closed';
             }
             $.ajax({
@@ -1246,7 +1279,7 @@
         
 
 
-        $('#btnPercentLowFood').on('click', function() {
+        $('#btnPercentLowFood').on('change', function() {
             strLowFood = $('#inputPercentLowFood').val();
             
             if (strLowFood != null && strLowFood != '') {
@@ -1266,45 +1299,102 @@
     </script>
     
     <script>
+        // const ctx = document.getElementById('myChart').getContext('2d');
+        // var xValues = ['11/11/22','11/12/22','11/13/22','11/14/22','11/15/22','11/16/22','11/17/22'];
+        // const myChart = new Chart(ctx, {
+        //     type: "line",
+        //     data: {
+        //         labels: xValues,
+        //         datasets: [{
+        //             //temp
+        //             label: 'Temperature',
+        //             yAxisID: 'Temperature',
+        //             data: [22.09,22.34,21.36,20.3,25.6,21.45,23.01,22.09,22.34,23.36,24.3,25.6,26.45,27.52,25.09,28.34,30.36,35.3,30.6,26.45,24.52],
+        //             borderColor: "red",
+        //             fill: false
+        //         }, {
+        //             //humidity
+        //             label: 'Humidity',
+        //             yAxisID: 'Humidity',
+        //             data: [45.24,51.06,49.05,46.39,54.71,49.33,47.88,45.24,43.06,42.05,46.39,53.71,43.05,40.88,45.24,47.06,49.05,46.39,48.71,55.33,50.88],
+        //             borderColor: "blue",
+        //             fill: false
+        //         }]
+        //     },
+        //     options: {
+        //         legend: {display: true},
+        //         scales: {
+        //             yAxes: [{
+        //                 id: 'Temperature',
+        //                 type: 'linear',
+        //                 position: 'right',
+        //                 label: 'Temperature (C)'
+        //             }, {
+        //                 id: 'Humidity',
+        //                 type: 'linear',
+        //                 position: 'left',
+        //                 label: 'Humidity'
+        //             }]
+        //         }
+        //     }
+        // });
+    </script>
+    <script>
         const ctx = document.getElementById('myChart').getContext('2d');
-        var xValues = ['11/11/22','11/12/22','11/13/22','11/14/22','11/15/22','11/16/22','11/17/22'];
-        const myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                    //temp
-                    label: 'Temperature',
-                    yAxisID: 'Temperature',
-                    data: [22.09,22.34,21.36,20.3,25.6,21.45,23.01,22.09,22.34,23.36,24.3,25.6,26.45,27.52,25.09,28.34,30.36,35.3,30.6,26.45,24.52],
-                    borderColor: "red",
-                    fill: false
-                }, {
-                    //humidity
-                    label: 'Humidity',
-                    yAxisID: 'Humidity',
-                    data: [45.24,51.06,49.05,46.39,54.71,49.33,47.88,45.24,43.06,42.05,46.39,53.71,43.05,40.88,45.24,47.06,49.05,46.39,48.71,55.33,50.88],
-                    borderColor: "blue",
-                    fill: false
-                }]
-            },
-            options: {
-                legend: {display: true},
-                scales: {
-                    yAxes: [{
-                        id: 'Temperature',
-                        type: 'linear',
-                        position: 'right',
-                        label: 'Temperature (C)'
-                    }, {
-                        id: 'Humidity',
-                        type: 'linear',
-                        position: 'left',
-                        label: 'Humidity'
-                    }]
+        let arrTemp = [];
+        let arrHumidity = [];
+        let arrDates = [];
+        $.getJSON('https://simplecoop.swollenhippo.com/environment.php',{SessionID:sessionStorage.getItem('SessionID'), days: 7}, function(result){
+            console.log(result);
+            if(result){
+                if(result.length > 0){
+                    $.each(result,function(index,logEntry){
+                        arrTemp.push(logEntry.Temperature);
+                        arrHumidity.push(logEntry.Humidity);
+                        arrDates.push(logEntry.ObservationDateTime);
+                    })
+                    console.log(arrTemp);
+                    console.log(arrHumidity);
+                    console.log(arrDates);
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                        labels: arrDates,
+                        datasets: [{
+                            label: 'Temp',
+                            data: arrTemp,
+                            borderWidth: 3,
+                            borderColor: "red",
+                            fill: false
+                        },{
+                            label: 'Humidity',
+                            data: arrHumidity,
+                            borderWidth: 3,
+                            borderColor: "blue",
+                            fill: false
+                        }]
+                        },
+                        options: {
+                            legend: {display: true},
+                            scales: {
+                                yAxes: [{
+                                    id: 'Temperature',
+                                    type: 'linear',
+                                    position: 'right',
+                                    label: 'Temperature (C)'
+                                }, {
+                                    id: 'Humidity',
+                                    type: 'linear',
+                                    position: 'left',
+                                    label: 'Humidity'
+                                }]
+                            }
+                        }
+                    });
                 }
             }
-        });
+        })
+
     </script>
 </body>
 </html>
